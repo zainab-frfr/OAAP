@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oaap/theme/theme_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +13,7 @@ class MyThemeTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 4,
+        elevation: 1.5,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Row(
@@ -38,9 +35,9 @@ class MyThemeTile extends StatelessWidget {
                             ? 'Light Theme'
                             : 'Dark Theme',
                       items: const [
-                        DropdownMenuItem(value: 'System Theme' , child: Text('System Theme')),
-                        DropdownMenuItem(value: 'Light Theme' , child: Text('Light Theme')),
-                        DropdownMenuItem(value: 'Dark Theme' , child: Text('Dark Theme')),
+                        DropdownMenuItem(value: 'System Theme' , child: Text('System Theme', overflow: TextOverflow.ellipsis,)),
+                        DropdownMenuItem(value: 'Light Theme' , child: Text('Light Theme', overflow: TextOverflow.ellipsis,)),
+                        DropdownMenuItem(value: 'Dark Theme' , child: Text('Dark Theme', overflow: TextOverflow.ellipsis,)),
                       ], 
                       onChanged: (value) {
                         switch (value) {

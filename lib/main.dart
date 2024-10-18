@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:oaap/theme/UI%20components/settings_page.dart';
 import 'package:oaap/theme/theme_model.dart';
 import 'package:oaap/theme/theme_notifier.dart';
-import 'package:oaap/theme/theme_toggle_tile.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,11 +25,7 @@ class MainApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeNotifier.themeMode,
-          home: const Scaffold(
-            body: Center(
-              child: MyThemeTile(),
-            ),
-          ),
+          home: const MySettingsPage()
       );
       },
     );
