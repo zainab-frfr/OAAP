@@ -3,8 +3,11 @@ import 'package:oaap/authentication/UI%20components/toggle_page.dart';
 import 'package:oaap/theme/theme_model.dart';
 import 'package:oaap/theme/theme_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []); //to hide status bar and navigation bar of phone.
   runApp(
     ChangeNotifierProvider(
       create: (_)=> ThemeNotifier(), //underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)

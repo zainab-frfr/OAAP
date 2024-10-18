@@ -24,9 +24,9 @@ class MySignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 160,),
+                const SizedBox(height: 150,),
                 const Text(
-                  "Welcome",
+                  "Create Account.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(

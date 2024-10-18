@@ -25,7 +25,7 @@ class MySignInPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 150,),
                 const Text(
-                  "Welcome Back",
+                  "Welcome Back.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(
