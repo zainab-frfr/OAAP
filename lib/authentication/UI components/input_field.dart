@@ -9,12 +9,10 @@ class MyInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
+    return TextField(
+        decoration: InputDecoration(hintText: hintText, hintStyle: const TextStyle(color: Colors.grey)),
         controller: controller,
         obscureText: obscureText,
-      ),
-    );
+      );
   }
 }
