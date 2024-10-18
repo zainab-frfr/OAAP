@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/theme/UI%20components/settings_page.dart';
+import 'package:oaap/authentication/UI%20components/sign_in_page.dart';
 import 'package:oaap/theme/theme_model.dart';
 import 'package:oaap/theme/theme_notifier.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeNotifier.themeMode,
-          home: const MySettingsPage()
+          home:  MySignInPage()
       );
       },
     );
