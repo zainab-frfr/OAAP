@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:oaap/authentication/UI%20components/buttons/google_button.dart';
 import 'package:oaap/authentication/UI%20components/buttons/sign_in_up_button.dart';
 import 'package:oaap/authentication/UI%20components/buttons/text_button.dart';
+import 'package:oaap/authentication/services/auth_service.dart';
 import 'input_field.dart';
 
 class MySignUpPage extends StatelessWidget {
@@ -12,6 +14,19 @@ class MySignUpPage extends StatelessWidget {
   final confirmPassController = TextEditingController();
 
   MySignUpPage({super.key, this.onTap});
+
+  Future<void> signUp(BuildContext context) async{
+    User? user = await AuthService().signUpWithGoogle();
+    if(user==null){
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You already have an account associated with this profile. Please sign in.'), 
+          duration:  Duration(seconds: 3),
+        )
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +39,7 @@ class MySignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 150,),
+                const SizedBox(height: 100,),
                 const Text(
                   "Create Account.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -77,7 +92,7 @@ class MySignUpPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20,),
-                const GoogleButton(),
+                GoogleButton(onTap: () => signUp(context),),
                 const SizedBox(height: 60,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
