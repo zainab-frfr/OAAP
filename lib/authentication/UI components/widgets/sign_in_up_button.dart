@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MySignInUpButton extends StatelessWidget {
-  final void Function()? onTap; 
+  final Function onTap; 
   final String text; 
   
-  const MySignInUpButton({super.key, this.onTap, required this.text});
+  const MySignInUpButton({super.key, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,9 @@ class MySignInUpButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 2,
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          onTap();
+        },
         child: Ink(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondaryContainer,

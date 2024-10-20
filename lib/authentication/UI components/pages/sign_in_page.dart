@@ -14,13 +14,37 @@ class MySignInPage extends StatelessWidget {
 
   MySignInPage({super.key, this.onTap});
 
-  Future<void> signIn(BuildContext context) async{
+  Future<void> googleSignIn(BuildContext context) async{
     User? user = await AuthService().signInWithGoogle();
     if(user==null){
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('You do not have an account associated with this profile. Please sign up.'), 
+          duration:  Duration(seconds: 3),
+        )
+      );
+    }
+  }
+
+  Future<void> emailPswdSignIp(BuildContext context) async{
+    try{
+      User? user = await AuthService().signInWithEmailAndPassword(emailController.text, passController.text);
+      if(user==null){
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('You do not have an account associated with this profile. Please sign up.'), 
+            duration:  Duration(seconds: 3),
+          )
+        );
+      }
+    }
+    on Exception catch (_){
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error! Please try again later.'), 
           duration:  Duration(seconds: 3),
         )
       );
@@ -62,7 +86,7 @@ class MySignInPage extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                const MySignInUpButton(text: 'Sign In'),
+                MySignInUpButton(text: 'Sign In', onTap: () => emailPswdSignIp(context),),
                 const SizedBox(
                   height: 80,
                 ),        
@@ -83,7 +107,7 @@ class MySignInPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20,),
-                GoogleButton(onTap: () => signIn(context),),
+                GoogleButton(onTap: () => googleSignIn(context),),
                 const SizedBox(height: 60,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

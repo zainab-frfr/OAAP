@@ -73,12 +73,42 @@ class AuthService{
 
   }
 
-  Future<void> _storeUser(User? user, String signInType) async{
+  Future<void> _storeUser(User? user, String signUpType) async{
     await _store.collection('users').add({
       "email": user?.email,
-      "sign_in_type": signInType,
+      "sign_in_type": signUpType,
     });
   }
 
+  Future<User?> signInWithEmailAndPassword(String email, String password) async{
 
+    bool accountAlrExists = await _accountExists(email); 
+    if(!accountAlrExists){ //if account does not exist its not going to let you sign in
+      return null;
+    }
+
+     try {
+      final userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.code);
+    }
+
+  }
+
+  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
+    bool accountAlrExists = await _accountExists(email); 
+    if(accountAlrExists){ //if account already exists its not going to let you sign up
+      return null;
+    }
+
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _storeUser(userCredential.user, 'emailpswd');
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.code);
+    }
+
+  }
 }

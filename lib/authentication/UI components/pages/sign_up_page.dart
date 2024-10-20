@@ -8,23 +8,50 @@ import '../widgets/input_field.dart';
 
 class MySignUpPage extends StatelessWidget {
   final void Function()? onTap;
-  
+
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmPassController = TextEditingController();
 
   MySignUpPage({super.key, this.onTap});
 
-  Future<void> signUp(BuildContext context) async{
+  Future<void> googleSignUp(BuildContext context) async {
     User? user = await AuthService().signUpWithGoogle();
-    if(user==null){
+    if (user == null) {
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You already have an account associated with this profile. Please sign in.'), 
-          duration:  Duration(seconds: 3),
-        )
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            'You already have an account associated with this profile. Please sign in.'),
+        duration: Duration(seconds: 3),
+      ));
+    }
+  }
+
+  Future<void> emailPswdSignUp(BuildContext context) async {
+    if (passController.text == confirmPassController.text) {
+      try {
+        User? user = await AuthService().signUpWithEmailAndPassword(
+            emailController.text, passController.text);
+        if (user == null) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+                'You already have an account associated with this profile. Please sign in.'),
+            duration: Duration(seconds: 3),
+          ));
+        }
+      } on Exception catch (_) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Error! Please try again later.'),
+          duration: Duration(seconds: 3),
+        ));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Passwords don\'t match.'),
+        duration: Duration(seconds: 3),
+      ));
     }
   }
 
@@ -39,7 +66,9 @@ class MySignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 100,),
+                const SizedBox(
+                  height: 100,
+                ),
                 const Text(
                   "Create Account.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -48,52 +77,56 @@ class MySignUpPage extends StatelessWidget {
                   height: 30,
                 ),
                 MyInputField(
-                    hintText: 'Email', 
-                    obscureText: false, 
-                    controller: emailController)
-                ,
+                    hintText: 'Email',
+                    obscureText: false,
+                    controller: emailController),
                 const SizedBox(
                   height: 20,
                 ),
                 MyInputField(
-                    hintText: 'Password', 
-                    obscureText: true, 
-                    controller: passController
-                ),
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: passController),
                 const SizedBox(
                   height: 20,
                 ),
                 MyInputField(
-                    hintText: 'Confirm Password', 
-                    obscureText: true, 
-                    controller: confirmPassController
-                ),
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                    controller: confirmPassController),
                 const SizedBox(
                   height: 30,
                 ),
-                const MySignInUpButton(text: 'Sign Up'),
+                MySignInUpButton(
+                  text: 'Sign Up',
+                  onTap: () => emailPswdSignUp(context),
+                ),
                 const SizedBox(
                   height: 60,
-                ),        
+                ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Divider(
-                        endIndent: 8,
-                      )
-                    ),
+                        child: Divider(
+                      endIndent: 8,
+                    )),
                     Text('Or Sign Up With'),
                     Expanded(
-                      child: Divider(
-                        indent: 8,
-                      )
-                    )
+                        child: Divider(
+                      indent: 8,
+                    ))
                   ],
                 ),
-                const SizedBox(height: 20,),
-                GoogleButton(onTap: () => signUp(context),),
-                const SizedBox(height: 60,),
+                const SizedBox(
+                  height: 20,
+                ),
+                GoogleButton(
+                  onTap: () => googleSignUp(context),
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
