@@ -1,27 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:oaap/authentication/UI%20components/buttons/google_button.dart';
-import 'package:oaap/authentication/UI%20components/buttons/sign_in_up_button.dart';
-import 'package:oaap/authentication/UI%20components/buttons/text_button.dart';
+import 'package:oaap/authentication/UI%20components/widgets/google_button.dart';
+import 'package:oaap/authentication/UI%20components/widgets/sign_in_up_button.dart';
+import 'package:oaap/authentication/UI%20components/widgets/text_button.dart';
 import 'package:oaap/authentication/services/auth_service.dart';
-import 'input_field.dart';
+import '../widgets/input_field.dart';
 
-class MySignUpPage extends StatelessWidget {
+class MySignInPage extends StatelessWidget {
   final void Function()? onTap;
-  
+
   final emailController = TextEditingController();
   final passController = TextEditingController();
-  final confirmPassController = TextEditingController();
 
-  MySignUpPage({super.key, this.onTap});
+  MySignInPage({super.key, this.onTap});
 
-  Future<void> signUp(BuildContext context) async{
-    User? user = await AuthService().signUpWithGoogle();
+  Future<void> signIn(BuildContext context) async{
+    User? user = await AuthService().signInWithGoogle();
     if(user==null){
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('You already have an account associated with this profile. Please sign in.'), 
+          content: Text('You do not have an account associated with this profile. Please sign up.'), 
           duration:  Duration(seconds: 3),
         )
       );
@@ -39,9 +38,9 @@ class MySignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 100,),
+                const SizedBox(height: 150,),
                 const Text(
-                  "Create Account.",
+                  "Welcome Back.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(
@@ -61,19 +60,11 @@ class MySignUpPage extends StatelessWidget {
                     controller: passController
                 ),
                 const SizedBox(
-                  height: 20,
-                ),
-                MyInputField(
-                    hintText: 'Confirm Password', 
-                    obscureText: true, 
-                    controller: confirmPassController
-                ),
-                const SizedBox(
                   height: 30,
                 ),
-                const MySignInUpButton(text: 'Sign Up'),
+                const MySignInUpButton(text: 'Sign In'),
                 const SizedBox(
-                  height: 60,
+                  height: 80,
                 ),        
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +74,7 @@ class MySignUpPage extends StatelessWidget {
                         endIndent: 8,
                       )
                     ),
-                    Text('Or Sign Up With'),
+                    Text('Or Sign In With'),
                     Expanded(
                       child: Divider(
                         indent: 8,
@@ -92,13 +83,13 @@ class MySignUpPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20,),
-                GoogleButton(onTap: () => signUp(context),),
+                GoogleButton(onTap: () => signIn(context),),
                 const SizedBox(height: 60,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Have an account? '),
-                    MyTextButton(text: 'Sign In.', onTap: onTap)
+                    const Text('New here? '),
+                    MyTextButton(text: 'Sign Up.', onTap: onTap)
                   ],
                 )
               ],
