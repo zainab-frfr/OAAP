@@ -7,17 +7,23 @@ class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _store = FirebaseFirestore.instance;
 
-  Future<User?> signInWithGoogle() async { 
+  Future<String> signInWithGoogle() async { 
+
+    try{
 
     final googleAccount = await GoogleSignIn().signIn(); //initiates the sign in process. returns a GoogleSignInAccount object if successful, and null if not.
 
     final googleAuth = await googleAccount?.authentication; //contains tokens needed to authenticate the user with firebase. 
 
-    bool accountAlrExists = await _accountExists(googleAccount!.email); 
+    if(googleAccount == null){
+      return 'user did not select account';
+    }
+
+    bool accountAlrExists = await _accountExists(googleAccount.email); 
 
     if(!accountAlrExists){ //if account does not exist its not going to let you sign in
       GoogleSignIn().signOut();
-      return null;
+      return 'account doesnot exist';
     }
 
     final credential = GoogleAuthProvider.credential( //created a credential here that will be used to login to firebase. 
@@ -25,23 +31,32 @@ class AuthService{
       idToken: googleAuth?.idToken
     );
 
-    final userCredential =  await _auth.signInWithCredential(credential);
+    await _auth.signInWithCredential(credential);
 
-    return userCredential.user;
+    return 'sign in successful';
+    } 
+    on Exception catch(_){
+      return 'error';
+    }
 
   }
 
-  Future<User?> signUpWithGoogle() async { 
+  Future<String> signUpWithGoogle() async { 
 
+    try {
     final googleAccount = await GoogleSignIn().signIn(); 
 
     final googleAuth = await googleAccount?.authentication; 
 
-    bool accountAlrExists = await _accountExists(googleAccount!.email); 
+    if(googleAccount == null){
+      return 'user did not select account';
+    }
+
+    bool accountAlrExists = await _accountExists(googleAccount.email); 
 
     if(accountAlrExists){ // if account does exist its not going to let you sign up
       GoogleSignIn().signOut();
-      return null;
+      return 'account already exists';
     }
 
     final credential = GoogleAuthProvider.credential( //created a credential here that will be used to login to firebase. 
@@ -53,7 +68,11 @@ class AuthService{
 
     await _storeUser(userCredential.user, 'google');
 
-    return userCredential.user;
+    return 'sign up successful';
+    }
+    on Exception catch (_){
+      return 'error';
+    }
 
   }
 
@@ -64,7 +83,7 @@ class AuthService{
 
   Future<bool> _accountExists(String email) async{
     
-     QuerySnapshot snapshot = await _store.collection('users').where("email", isEqualTo: email).get(); //returns all documents where email matches
+     QuerySnapshot snapshot = await _store.collection('users').where("email", isEqualTo: email ).get(); //returns all documents where email matches
 
      if(snapshot.docs.isEmpty){
       return false;

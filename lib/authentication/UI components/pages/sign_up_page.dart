@@ -16,13 +16,19 @@ class MySignUpPage extends StatelessWidget {
   MySignUpPage({super.key, this.onTap});
 
   Future<void> googleSignUp(BuildContext context) async {
-    User? user = await AuthService().signUpWithGoogle();
-    if (user == null) {
+    String retStr = await AuthService().signUpWithGoogle();
+    String message = '';
+    if (retStr == 'account already exists') {
+      message = 'A profile is already associated with this account. Please sign in.';
+    } else if (retStr == 'error') {
+      message = 'Unexpected Error! Please try again later.';
+    }
+
+    if (retStr != 'user did not select account' && retStr != 'sign up successful'){
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-            'You already have an account associated with this profile. Please sign in.'),
-        duration: Duration(seconds: 3),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
       ));
     }
   }

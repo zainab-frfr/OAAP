@@ -14,40 +14,43 @@ class MySignInPage extends StatelessWidget {
 
   MySignInPage({super.key, this.onTap});
 
-  Future<void> googleSignIn(BuildContext context) async{
-    User? user = await AuthService().signInWithGoogle();
-    if(user==null){
+  Future<void> googleSignIn(BuildContext context) async {
+    String retStr = await AuthService().signInWithGoogle();
+    String message = '';
+    if (retStr == 'account doesnot exist') {
+      message =
+          'You do not have an account associated with this profile. Please sign up.';
+    } else if (retStr == 'error') {
+      message = 'Unexpected Error! Please try again later.';
+    }
+
+    if (retStr != 'user did not select account' && retStr != 'sign in successful'){
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You do not have an account associated with this profile. Please sign up.'), 
-          duration:  Duration(seconds: 3),
-        )
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+      ));
     }
   }
 
-  Future<void> emailPswdSignIp(BuildContext context) async{
-    try{
-      User? user = await AuthService().signInWithEmailAndPassword(emailController.text, passController.text);
-      if(user==null){
+  Future<void> emailPswdSignIp(BuildContext context) async {
+    try {
+      User? user = await AuthService().signInWithEmailAndPassword(
+          emailController.text, passController.text);
+      if (user == null) {
         // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('You do not have an account associated with this profile. Please sign up.'), 
-            duration:  Duration(seconds: 3),
-          )
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'You do not have an account associated with this profile. Please sign up.'),
+          duration: Duration(seconds: 3),
+        ));
       }
-    }
-    on Exception catch (_){
+    } on Exception catch (_) {
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error! Please try again later.'), 
-          duration:  Duration(seconds: 3),
-        )
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Error! Please try again later.'),
+        duration: Duration(seconds: 3),
+      ));
     }
   }
 
@@ -62,7 +65,9 @@ class MySignInPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 150,),
+                const SizedBox(
+                  height: 150,
+                ),
                 const Text(
                   "Welcome Back.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -71,44 +76,49 @@ class MySignInPage extends StatelessWidget {
                   height: 30,
                 ),
                 MyInputField(
-                    hintText: 'Email', 
-                    obscureText: false, 
-                    controller: emailController)
-                ,
+                    hintText: 'Email',
+                    obscureText: false,
+                    controller: emailController),
                 const SizedBox(
                   height: 20,
                 ),
                 MyInputField(
-                    hintText: 'Password', 
-                    obscureText: true, 
-                    controller: passController
-                ),
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: passController),
                 const SizedBox(
                   height: 30,
                 ),
-                MySignInUpButton(text: 'Sign In', onTap: () => emailPswdSignIp(context),),
+                MySignInUpButton(
+                  text: 'Sign In',
+                  onTap: () => emailPswdSignIp(context),
+                ),
                 const SizedBox(
                   height: 80,
-                ),        
+                ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Divider(
-                        endIndent: 8,
-                      )
-                    ),
+                        child: Divider(
+                      endIndent: 8,
+                    )),
                     Text('Or Sign In With'),
                     Expanded(
-                      child: Divider(
-                        indent: 8,
-                      )
-                    )
+                        child: Divider(
+                      indent: 8,
+                    ))
                   ],
                 ),
-                const SizedBox(height: 20,),
-                GoogleButton(onTap: () => googleSignIn(context),),
-                const SizedBox(height: 60,),
+                const SizedBox(
+                  height: 20,
+                ),
+                GoogleButton(
+                  onTap: () => googleSignIn(context),
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
