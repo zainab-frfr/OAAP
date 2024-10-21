@@ -37,6 +37,10 @@ class _ClientCategoryTileState extends State<ClientCategoryTile> {
                     const Text('Categories'),
                     ElevatedButton(
                       onPressed: (){}, 
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.inverseSurface),
+                        backgroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.background)
+                      ),
                       child: const Icon(Icons.edit, applyTextScaling: true,),
                     )
                   ],
