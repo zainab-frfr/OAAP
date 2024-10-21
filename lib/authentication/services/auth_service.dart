@@ -19,7 +19,7 @@ class AuthService{
       return 'user did not select account';
     }
 
-    bool accountAlrExists = await _accountExists(googleAccount.email); 
+    bool accountAlrExists = await _accountExists(googleAccount.email,"google",true); 
 
     if(!accountAlrExists){ //if account does not exist its not going to let you sign in
       GoogleSignIn().signOut();
@@ -52,7 +52,7 @@ class AuthService{
       return 'user did not select account';
     }
 
-    bool accountAlrExists = await _accountExists(googleAccount.email); 
+    bool accountAlrExists = await _accountExists(googleAccount.email, "google", false); 
 
     if(accountAlrExists){ // if account does exist its not going to let you sign up
       GoogleSignIn().signOut();
@@ -81,14 +81,20 @@ class AuthService{
     await _auth.signOut();
   }
 
-  Future<bool> _accountExists(String email) async{
-    
-     QuerySnapshot snapshot = await _store.collection('users').where("email", isEqualTo: email ).get(); //returns all documents where email matches
+  Future<bool> _accountExists(String email, String signInType, bool isSignIn) async{
+    QuerySnapshot snapshot;
+    if(isSignIn){
+      snapshot = await _store.collection('users').where("email", isEqualTo: email ).where("sign_in_type", isEqualTo: signInType).get(); 
+      //returns all documents where email and sign in type matches
+    }else{
+      snapshot = await _store.collection('users').where("email", isEqualTo: email ).get(); 
+      //returns all documents where email matches
+    }
 
-     if(snapshot.docs.isEmpty){
+    if(snapshot.docs.isEmpty){
       return false;
-     }
-     return true;
+    }
+    return true;
 
   }
 
@@ -101,7 +107,7 @@ class AuthService{
 
   Future<User?> signInWithEmailAndPassword(String email, String password) async{
 
-    bool accountAlrExists = await _accountExists(email); 
+    bool accountAlrExists = await _accountExists(email, "emailpswd", true); 
     if(!accountAlrExists){ //if account does not exist its not going to let you sign in
       return null;
     }
@@ -116,7 +122,7 @@ class AuthService{
   }
 
   Future<User?> signUpWithEmailAndPassword(String email, String password) async {
-    bool accountAlrExists = await _accountExists(email); 
+    bool accountAlrExists = await _accountExists(email, "emailpswd", false); 
     if(accountAlrExists){ //if account already exists its not going to let you sign up
       return null;
     }
