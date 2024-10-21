@@ -15,6 +15,7 @@ class GoogleButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       elevation: 2,
       child: InkWell(
+        borderRadius: BorderRadius.circular(30),
         onTap: () async {
           // if(isSignIn){
           //   await _auth.signInWithGoogle();

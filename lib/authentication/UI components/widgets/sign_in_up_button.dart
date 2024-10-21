@@ -12,6 +12,7 @@ class MySignInUpButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 2,
       child: InkWell(
+        borderRadius: BorderRadius.circular(15),
         onTap: (){
           onTap();
         },

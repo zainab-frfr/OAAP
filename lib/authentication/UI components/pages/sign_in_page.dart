@@ -15,7 +15,9 @@ class MySignInPage extends StatelessWidget {
   MySignInPage({super.key, this.onTap});
 
   Future<void> googleSignIn(BuildContext context) async {
+
     String retStr = await AuthService().signInWithGoogle();
+
     String message = '';
     if (retStr == 'account doesnot exist') {
       message =
@@ -24,7 +26,8 @@ class MySignInPage extends StatelessWidget {
       message = 'Unexpected Error! Please try again later.';
     }
 
-    if (retStr != 'user did not select account' && retStr != 'sign in successful'){
+    if (retStr != 'user did not select account' &&
+        retStr != 'sign in successful') {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(message),
@@ -33,10 +36,10 @@ class MySignInPage extends StatelessWidget {
     }
   }
 
-  Future<void> emailPswdSignIp(BuildContext context) async {
+  Future<void> emailPswdSignIn(BuildContext context) async {
     try {
-      User? user = await AuthService().signInWithEmailAndPassword(
-          emailController.text, passController.text);
+      User? user = await AuthService().signInWithEmailAndPassword(emailController.text, passController.text);
+
       if (user == null) {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -91,7 +94,7 @@ class MySignInPage extends StatelessWidget {
                 ),
                 MySignInUpButton(
                   text: 'Sign In',
-                  onTap: () => emailPswdSignIp(context),
+                  onTap: () => emailPswdSignIn(context),
                 ),
                 const SizedBox(
                   height: 80,

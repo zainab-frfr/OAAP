@@ -36,8 +36,8 @@ class MySignUpPage extends StatelessWidget {
   Future<void> emailPswdSignUp(BuildContext context) async {
     if (passController.text == confirmPassController.text) {
       try {
-        User? user = await AuthService().signUpWithEmailAndPassword(
-            emailController.text, passController.text);
+        User? user = await AuthService().signUpWithEmailAndPassword(emailController.text, passController.text);
+        
         if (user == null) {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
