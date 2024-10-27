@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
-  canvasColor: Colors.grey[100]!, //background color of UI components like theme toggle tile
-  scaffoldBackgroundColor: Colors.white, 
+  canvasColor: Colors.white, //background color of UI components like theme toggle tile
+  scaffoldBackgroundColor: Colors.grey[100]!, 
   appBarTheme: const AppBarTheme( //for color of app bar
-    backgroundColor: Colors.transparent
+    backgroundColor: Colors.transparent,
+    //foregroundColor: Color.fromARGB(255, 24, 111, 183),
   ),
   colorSchemeSeed: Colors.blue, // generates a full color scheme based on Material design guidelines (for eg. cursor color)
   inputDecorationTheme: const InputDecorationTheme( // for decoration of text fields
@@ -22,10 +23,11 @@ final ThemeData lightTheme = ThemeData(
 
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  canvasColor: const Color.fromARGB(255, 36, 35, 35),
-  scaffoldBackgroundColor: Colors.grey[900]!, 
+  canvasColor: const Color.fromARGB(255, 31, 31, 31),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 18), 
   appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.transparent
+    backgroundColor: Colors.transparent,
+    //foregroundColor: Color.fromARGB(255, 72, 142, 199)
   ),
   colorSchemeSeed: Colors.blue,
   inputDecorationTheme: const InputDecorationTheme(

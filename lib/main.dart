@@ -12,8 +12,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); //uses the firebase_options.dart in lib
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []); //to hide status bar and navigation bar of phone.
   runApp(
-    ChangeNotifierProvider(
-      create: (_)=> ThemeNotifier(), //underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeNotifier())//underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
+      ],
       child: const MainApp(),
     )
   );

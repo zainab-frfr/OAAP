@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/client%20category%20management/UI%20components/category_chip.dart';
+import 'package:oaap/client%20category%20management/UI%20components/category_chips.dart';
+import 'package:oaap/client%20category%20management/UI%20components/my_elevated_button.dart';
 
-class ClientCategoryTile extends StatefulWidget {
+class ClientCategoryTile extends StatelessWidget {
 
   const ClientCategoryTile({super.key});
-
-  @override
-  State<ClientCategoryTile> createState() => _ClientCategoryTileState();
-}
-
-class _ClientCategoryTileState extends State<ClientCategoryTile> {
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +29,12 @@ class _ClientCategoryTileState extends State<ClientCategoryTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Categories'),
-                    ElevatedButton(
-                      onPressed: (){}, 
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.inverseSurface),
-                        backgroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.background)
-                      ),
-                      child: const Icon(Icons.edit, applyTextScaling: true,),
+                    const Text('Categories', style: TextStyle(fontSize: 12),),
+                    MyElevatedButton(
+                      width: 40, 
+                      height: 40, 
+                      child: const Icon(Icons.edit, applyTextScaling: true, size: 20,), 
+                      onTap: (){}
                     )
                   ],
                 ),
@@ -51,7 +44,7 @@ class _ClientCategoryTileState extends State<ClientCategoryTile> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: const CategoryChip(categories: ['shampoo','hair care','beverages','toothpaste'],)),
+                      child: const CategoryChips(categories: ['shampoo','hair care','beverages','toothpaste'],)),
                 ),
               ],
             ),

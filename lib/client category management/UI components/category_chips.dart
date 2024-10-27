@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class CategoryChip extends StatelessWidget {
+class CategoryChips extends StatelessWidget {
   final List<String> categories;
 
-  const CategoryChip({super.key, required this.categories});
+  const CategoryChips({super.key, required this.categories});
 
   @override
   Widget build(BuildContext context) {
