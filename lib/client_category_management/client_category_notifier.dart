@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ClientCategoryNotifier extends ChangeNotifier{
-
+class ClientCategoryNotifier extends ChangeNotifier {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
 
-  Map<String,List<String>> _clientsWithCategories = {} ;
+  Map<String, List<String>> _clientsWithCategories = {};
   List<String> _allClients = [];
 
-  Map<String,List<String>> get clientsWithCategories => _clientsWithCategories; 
+  Map<String, List<String>> get clientsWithCategories => _clientsWithCategories;
   List<String> get allClients => _allClients;
 
   bool _fetchedMap = false;
@@ -18,13 +17,22 @@ class ClientCategoryNotifier extends ChangeNotifier{
   bool get fetchedList => _fetchedList;
 
   Future<String> addCategoryForAClientToFirestore(String category, String client) async {
+
+    category = category.trim();
+
     List<String>? categories = _clientsWithCategories[client];
-    
-    if(categories!.contains(category)){
+    bool contains = categories!.any((c) => c.toLowerCase() == category.toLowerCase());
+
+    if (contains) {
       return 'This category already exists for $client';
     }
     try {
-      _store.collection("Clients").doc(client).collection("Categories").doc(category).set({});
+      _store
+          .collection("Clients")
+          .doc(client)
+          .collection("Categories")
+          .doc(category)
+          .set({});
       await retrieveClientsCategories();
       return 'Added';
     } catch (e) {
@@ -32,6 +40,32 @@ class ClientCategoryNotifier extends ChangeNotifier{
     }
   }
 
+  Future<String> deleteCategoryFromFirestore(String category, String client) async {
+    category = category.trim();
+
+    List<String>? categories = _clientsWithCategories[client];
+    bool contains = categories!.contains(category);
+    if (!contains) return 'Category does not exist. Please check case.';
+
+    _fetchedMap = false;
+    _fetchedList = false;
+    notifyListeners();
+
+    try {
+      await _store.collection("Clients").doc(client).collection("Categories").doc(category).delete();
+      await retrieveClientsCategories();
+      await getAllClients();
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
+      return 'Deleted.';
+    } catch (e) {
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
+      return 'Error. Try Again.';
+    }
+  }  
 
   Future<String> addClientToFirestore(String client) async {
     _fetchedMap = false;
@@ -40,68 +74,100 @@ class ClientCategoryNotifier extends ChangeNotifier{
 
     try {
       bool containsClient = _allClients.any((c) => c.toLowerCase() == client.toLowerCase());
-      if (!containsClient){
+      if (!containsClient) {
         await _store.collection("Clients").doc(client).set({});
         await retrieveClientsCategories();
         await getAllClients();
         return 'Added';
       }
 
-    _fetchedMap = true;
-    _fetchedList = true;
-    notifyListeners();
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
       return 'Client already exists';
     } catch (e) {
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
       return e.toString();
     }
   }
 
-  Future<void> retrieveClientsCategories() async{
+  Future<String> deleteClientFromFirestore(String client) async {
+    bool containsClient = _allClients.contains(client);
+    if (!containsClient) return 'Client does not exist. Please check case.';
+
+    _fetchedMap = false;
+    _fetchedList = false;
+    notifyListeners();
+
+    try {
+      await _store.collection("Clients").doc(client).delete();
+      await retrieveClientsCategories();
+      await getAllClients();
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
+      return 'Deleted.';
+    } catch (e) {
+      _fetchedMap = true;
+      _fetchedList = true;
+      notifyListeners();
+      return 'Error. Try Again.';
+    }
+  }
+
+  Future<void> retrieveClientsCategories() async {
     _fetchedMap = false;
     _clientsWithCategories.clear();
     notifyListeners();
 
-    try{
-      QuerySnapshot clientSnapshot = await _store.collection("Clients").get(); //gets saray clients 
+    try {
+      QuerySnapshot clientSnapshot =
+          await _store.collection("Clients").get(); //gets saray clients
 
-      for(var clientDoc in clientSnapshot.docs){ //for every client
+      for (var clientDoc in clientSnapshot.docs) {
+        //for every client
         List<String> categories = [];
 
-        QuerySnapshot categoriesForClient = await _store.collection("Clients").doc(clientDoc.id).collection("Categories").get(); //gets categories for a client
+        QuerySnapshot categoriesForClient = await _store
+            .collection("Clients")
+            .doc(clientDoc.id)
+            .collection("Categories")
+            .get(); //gets categories for a client
 
-        for(var categoryDoc in categoriesForClient.docs){
+        for (var categoryDoc in categoriesForClient.docs) {
           categories.add(categoryDoc.id);
         }
 
-        _clientsWithCategories[clientDoc.id] = categories; //adds em {'client':[categories list]} to the map. 
-
+        _clientsWithCategories[clientDoc.id] =
+            categories; //adds em {'client':[categories list]} to the map.
       }
-    } catch (e){
+    } catch (e) {
       _clientsWithCategories = {};
     }
-    
+
     _fetchedMap = true;
     notifyListeners();
   }
 
-  Future<void> getAllClients() async{
+  Future<void> getAllClients() async {
     _fetchedList = false;
     _allClients.clear();
     notifyListeners();
 
-    try{
-      QuerySnapshot clientSnapshot = await _store.collection("Clients").get(); //gets saray clients 
+    try {
+      QuerySnapshot clientSnapshot =
+          await _store.collection("Clients").get(); //gets saray clients
 
-      for (var clientDoc in clientSnapshot.docs){
+      for (var clientDoc in clientSnapshot.docs) {
         _allClients.add(clientDoc.id);
       }
-
-    } catch (e){
+    } catch (e) {
       _allClients = [];
     }
 
     _fetchedList = true;
     notifyListeners();
   }
-
 }

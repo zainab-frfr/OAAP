@@ -9,20 +9,3 @@ class MyHomePage extends StatelessWidget {
     return const MyClientCategoryPage();
   }
 }
-
-//  Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               FloatingActionButton(
-//                   child: const Text('Logout'),
-//                   onPressed: () async {
-//                     await AuthService().signOut();
-//                   }),
-//               const SizedBox(
-//                 height: 30,
-//               ),
-//               const ClientCategoryTile(),
-//             ],
-//         )
-//       ),

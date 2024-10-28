@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/client_category_management/ui_components/category_chips.dart';
-import 'package:oaap/client_category_management/ui_components/my_elevated_button.dart';
 
 class ClientCategoryTile extends StatelessWidget {
   final String client;
@@ -33,14 +32,34 @@ class ClientCategoryTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Categories', style: TextStyle(fontSize: 12),),
-                    MyElevatedButton(
-                      width: 40, 
-                      height: 40, 
-                      child: const Icon(Icons.edit, applyTextScaling: true, size: 20,), 
-                      onTap: (){
-                        onTap();
-                      }
-                    )
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.edit, size: 20),
+                      onSelected: (String value) {
+                        onTap(value);
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        const PopupMenuItem<String>(
+                          height: 40,
+                          value: 'add',
+                          child: Text(
+                            'Add Category',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ),
+                        const PopupMenuDivider(),
+                        const PopupMenuItem<String>(
+                          height: 40,
+                          value: 'delete',
+                          child: Text(
+                            'Remove Category',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ),
+                      ],
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(bottom: Radius.circular(2))),
+                    ),
                   ],
                 ),
                 Flexible(

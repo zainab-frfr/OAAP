@@ -45,7 +45,7 @@ class MainApp extends StatelessWidget {
 /*
 stuff left
 
-1. when catey added tou you can't see circular progress indicator kion ke context popping issue. 
+1. when category or client added tou you can't see circular progress indicator kion ke context popping issue. 
 2. add koi image ya gradient background in signup login screen. 
 
 */
