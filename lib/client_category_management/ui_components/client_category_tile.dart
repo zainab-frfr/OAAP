@@ -5,8 +5,9 @@ import 'package:oaap/client_category_management/ui_components/my_elevated_button
 class ClientCategoryTile extends StatelessWidget {
   final String client;
   final List<String> categories;
+  final Function onTap;
   
-  const ClientCategoryTile({super.key, required this.client, required this.categories});
+  const ClientCategoryTile({super.key, required this.client, required this.categories, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,9 @@ class ClientCategoryTile extends StatelessWidget {
                       width: 40, 
                       height: 40, 
                       child: const Icon(Icons.edit, applyTextScaling: true, size: 20,), 
-                      onTap: (){}
+                      onTap: (){
+                        onTap();
+                      }
                     )
                   ],
                 ),

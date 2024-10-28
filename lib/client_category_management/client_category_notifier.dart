@@ -17,11 +17,16 @@ class ClientCategoryNotifier extends ChangeNotifier{
   bool get fetchedMap => _fetchedMap;
   bool get fetchedList => _fetchedList;
 
-  Future<String> addCategoryToFirestore(String category, String client) async {
+  Future<String> addCategoryForAClientToFirestore(String category, String client) async {
+    List<String>? categories = _clientsWithCategories[client];
+    
+    if(categories!.contains(category)){
+      return 'This category already exists for $client';
+    }
     try {
       _store.collection("Clients").doc(client).collection("Categories").doc(category).set({});
       await retrieveClientsCategories();
-      return 'added';
+      return 'Added';
     } catch (e) {
       return e.toString();
     }
@@ -39,9 +44,9 @@ class ClientCategoryNotifier extends ChangeNotifier{
         await _store.collection("Clients").doc(client).set({});
         await retrieveClientsCategories();
         await getAllClients();
-        return 'added';
+        return 'Added';
       }
-      
+
     _fetchedMap = true;
     _fetchedList = true;
     notifyListeners();
@@ -53,7 +58,7 @@ class ClientCategoryNotifier extends ChangeNotifier{
 
   Future<void> retrieveClientsCategories() async{
     _fetchedMap = false;
-    _clientsWithCategories ={};
+    _clientsWithCategories.clear();
     notifyListeners();
 
     try{
@@ -81,7 +86,7 @@ class ClientCategoryNotifier extends ChangeNotifier{
 
   Future<void> getAllClients() async{
     _fetchedList = false;
-    _allClients = [];
+    _allClients.clear();
     notifyListeners();
 
     try{

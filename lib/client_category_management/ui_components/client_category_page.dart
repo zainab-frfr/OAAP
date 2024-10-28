@@ -77,7 +77,18 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
 
                 return Column(
                   children: [
-                    ClientCategoryTile(client: client, categories: categories),
+                    ClientCategoryTile(
+                      client: client, 
+                      categories: categories, 
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _addCategory(context, client);
+                          },
+                        );
+                      },
+                    ),
                     const SizedBox(height: 5,)
                   ],
                 );
@@ -140,13 +151,57 @@ AlertDialog _addClient(BuildContext context) {
             child: const Text('Ok'), 
             onTap: () async {
               final navigatorContext = context;
-              // ignore: use_build_context_synchronously
-              Navigator.pop(context);
-              
               String message = await navigatorContext.read<ClientCategoryNotifier>().addClientToFirestore(companyController.text);
               
               // ignore: use_build_context_synchronously
               showSnackbar(navigatorContext, message);
+              
+              // ignore: use_build_context_synchronously
+              Navigator.pop(context);
+              
+            }
+          )
+        ],
+      )
+    ],
+  );
+}
+
+AlertDialog _addCategory(BuildContext context, String client) {
+  final TextEditingController categoryController = TextEditingController();
+
+  return AlertDialog(
+    title: Text('Add Category to $client'),
+    content: TextField(
+      controller: categoryController,
+      decoration: const InputDecoration(
+          hintText: 'Category',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 12)),
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          MyElevatedButton(
+            width: 80, 
+            height: 40, 
+            child: const Text('Cancel'), 
+            onTap: (){
+              Navigator.pop(context);
+            }
+          ),
+          MyElevatedButton(
+            width: 80, 
+            height: 40, 
+            child: const Text('Ok'), 
+            onTap: () async {
+              final navigatorContext = context;
+              String message = await navigatorContext.read<ClientCategoryNotifier>().addCategoryForAClientToFirestore(categoryController.text, client);              
+              // ignore: use_build_context_synchronously
+              showSnackbar(navigatorContext, message);
+              // ignore: use_build_context_synchronously
+              Navigator.pop(context);
               
             }
           )
