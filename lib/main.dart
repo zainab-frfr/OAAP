@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
+import 'package:oaap/client_category_management/client_category_notifier.dart';
 import 'package:oaap/firebase_options.dart';
 import 'package:oaap/theme/theme_model.dart';
 import 'package:oaap/theme/theme_notifier.dart';
@@ -10,11 +11,12 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); //uses the firebase_options.dart in lib
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []); //to hide status bar and navigation bar of phone.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeNotifier())//underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),//underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
+        ChangeNotifierProvider(create: (_) => ClientCategoryNotifier())
       ],
       child: const MainApp(),
     )

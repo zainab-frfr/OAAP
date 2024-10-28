@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/theme/UI%20components/theme_toggle_tile.dart';
+import 'package:oaap/theme/ui_components/theme_toggle_tile.dart';
 
 class MySettingsPage extends StatelessWidget {
   const MySettingsPage({super.key});

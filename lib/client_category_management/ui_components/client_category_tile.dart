@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/client%20category%20management/UI%20components/category_chips.dart';
-import 'package:oaap/client%20category%20management/UI%20components/my_elevated_button.dart';
+import 'package:oaap/client_category_management/ui_components/category_chips.dart';
+import 'package:oaap/client_category_management/ui_components/my_elevated_button.dart';
 
 class ClientCategoryTile extends StatelessWidget {
-
-  const ClientCategoryTile({super.key});
+  final String client;
+  final List<String> categories;
+  
+  const ClientCategoryTile({super.key, required this.client, required this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,9 @@ class ClientCategoryTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Loreal',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  client,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 10,
@@ -44,7 +46,7 @@ class ClientCategoryTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: const CategoryChips(categories: ['shampoo','hair care','beverages','toothpaste'],)),
+                      child: CategoryChips(categories: categories,)),
                 ),
               ],
             ),

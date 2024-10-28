@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:oaap/authentication/UI%20components/pages/toggle_page.dart';
+import 'package:oaap/authentication/ui_components/pages/toggle_page.dart';
 import 'package:oaap/home.dart';
 
 class AuthGate extends StatefulWidget {
