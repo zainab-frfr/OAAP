@@ -12,6 +12,8 @@ class MyClientCategoryPage extends StatefulWidget {
 }
 
 class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -33,6 +35,7 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
     bool fetchedList = context.watch<ClientCategoryNotifier>().fetchedList;
 
     return Scaffold(
+      key: _scaffoldKey,
         appBar: AppBar(
           title: const Padding(
             padding: EdgeInsets.symmetric(
@@ -50,9 +53,9 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
                   context: context,
                   builder: (context) {
                     if (value == 'Add Client') {
-                      return _manageClient(context, 'add');
+                      return _manageClient(context, 'add', _scaffoldKey);
                     } else {
-                      return _manageClient(context, 'delete');
+                      return _manageClient(context, 'delete', _scaffoldKey);
                     }
                   },
                 );
@@ -98,11 +101,12 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
                             client: client,
                             categories: categories,
                             onTap: (String value) {
-                              WidgetsBinding.instance.addPostFrameCallback((_){
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return _manageCategory(context, client, value);
+                                    return _manageCategory(
+                                        context, client, value, _scaffoldKey);
                                   },
                                 );
                               });
@@ -127,11 +131,13 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
   }
 }
 
-AlertDialog _manageClient(BuildContext context, String toDo) {
+AlertDialog _manageClient(BuildContext context, String toDo, GlobalKey<ScaffoldState> scaffoldKey) {
   final TextEditingController companyController = TextEditingController();
 
   return AlertDialog(
-    title: (toDo == 'add')? const Text('Add Client') :const Text('Delete Client'),
+    title: (toDo == 'add')
+        ? const Text('Add Client')
+        : const Text('Delete Client'),
     content: TextField(
       controller: companyController,
       decoration: const InputDecoration(
@@ -155,20 +161,20 @@ AlertDialog _manageClient(BuildContext context, String toDo) {
               height: 40,
               child: const Text('Ok'),
               onTap: () async {
-                String message = (toDo =='add')
-                // ignore: use_build_context_synchronously
-                ? await context
-                    .read<ClientCategoryNotifier>()
-                    .addClientToFirestore(companyController.text)
-                // ignore: use_build_context_synchronously
-                : await context
-                  .read<ClientCategoryNotifier>()
-                  .deleteClientFromFirestore(companyController.text);
-                // ignore: use_build_context_synchronously
-                showSnackbar(context, message);
-
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
+
+                String message = (toDo == 'add')
+                    // ignore: use_build_context_synchronously
+                    ? await context
+                        .read<ClientCategoryNotifier>()
+                        .addClientToFirestore(companyController.text)
+                    // ignore: use_build_context_synchronously
+                    : await context
+                        .read<ClientCategoryNotifier>()
+                        .deleteClientFromFirestore(companyController.text);
+                // ignore: use_build_context_synchronously
+                showSnackbar(scaffoldKey.currentContext!, message);
               })
         ],
       )
@@ -176,11 +182,13 @@ AlertDialog _manageClient(BuildContext context, String toDo) {
   );
 }
 
-AlertDialog _manageCategory(BuildContext context, String client, String toDo) {
+AlertDialog _manageCategory(BuildContext context, String client, String toDo, GlobalKey<ScaffoldState> scaffoldKey ) {
   final TextEditingController categoryController = TextEditingController();
 
   return AlertDialog(
-    title: (toDo == 'add')? Text('Add Category to $client') : Text('Remove Category from $client'),
+    title: (toDo == 'add')
+        ? Text('Add Category to $client')
+        : Text('Remove Category from $client'),
     content: TextField(
       controller: categoryController,
       decoration: const InputDecoration(
@@ -204,20 +212,22 @@ AlertDialog _manageCategory(BuildContext context, String client, String toDo) {
               height: 40,
               child: const Text('Ok'),
               onTap: () async {
-                final navigatorContext = context;
-                String message = (toDo == 'add')
-                // ignore: use_build_context_synchronously
-                ? await navigatorContext
-                    .read<ClientCategoryNotifier>()
-                    .addCategoryForAClientToFirestore(categoryController.text, client)
-                // ignore: use_build_context_synchronously
-                : await navigatorContext
-                    .read<ClientCategoryNotifier>()
-                    .deleteCategoryFromFirestore(categoryController.text, client);
-                // ignore: use_build_context_synchronously
-                showSnackbar(navigatorContext, message);
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
+
+                String message = (toDo == 'add')
+                    // ignore: use_build_context_synchronously
+                    ? await context
+                        .read<ClientCategoryNotifier>()
+                        .addCategoryForAClientToFirestore(
+                            categoryController.text, client)
+                    // ignore: use_build_context_synchronously
+                    : await context
+                        .read<ClientCategoryNotifier>()
+                        .deleteCategoryFromFirestore(
+                            categoryController.text, client);
+                // ignore: use_build_context_synchronously
+                showSnackbar(scaffoldKey.currentContext!, message);
               })
         ],
       )
