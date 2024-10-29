@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/client_category_notifier.dart';
+import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
 import 'package:oaap/theme/theme_model.dart';
 import 'package:oaap/theme/theme_notifier.dart';
+import 'package:oaap/theme/ui_components/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -35,7 +37,12 @@ class MainApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeNotifier.themeMode,
-          home: const AuthGate() //in lib>authentication>services
+          initialRoute: '/authGate',
+          routes: {
+            '/authGate' : (context) => const AuthGate(), //in lib>authentication>services
+            '/clientCategoryManagement': (context) => const MyClientCategoryPage(),
+            '/settings':(context) => const MySettingsPage(),
+          },
       );
       },
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oaap/theme/ui_components/logout_button.dart';
 import 'package:oaap/theme/ui_components/theme_toggle_tile.dart';
 
 class MySettingsPage extends StatelessWidget {
@@ -12,7 +13,8 @@ class MySettingsPage extends StatelessWidget {
       ),
       body: const Column(
         children: [
-          MyThemeTile()
+          MyThemeTile(),
+          MyLogoutButton()
         ],
       ),
     );

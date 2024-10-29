@@ -19,12 +19,13 @@ class MyThemeTile extends StatelessWidget {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Theme', style: TextStyle(fontWeight: FontWeight.bold),),
+                const Text('Theme',),
                 FittedBox(
                   fit:  BoxFit.scaleDown,
                   child: SizedBox(
-                    width: 120,
+                    width: 200,
                     child: DropdownButtonFormField(
+                      isDense: true,
                       decoration: const InputDecoration(
                         border: InputBorder.none
                       ),
