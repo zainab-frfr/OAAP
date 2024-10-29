@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oaap/dashboards/widgets/admin_action_tile.dart';
+import 'widgets/my_round_appbar.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -6,86 +8,82 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shape: const CustomAppBarShape(),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight + 20),
+              child: AppBar(
+                shape: const CustomAppBarShape(),
+                backgroundColor: (MediaQuery.platformBrightnessOf(context) ==
+                        Brightness.light)
+                    ? const Color.fromARGB(255, 81, 161, 227)
+                    : const Color.fromARGB(255, 38, 37, 37),
+                elevation: 0,
+              ),
+            ),
+          ),
+          Positioned(
+              top: MediaQuery.sizeOf(context).height * 0.25,
+              child:  Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: MediaQuery.sizeOf(context).width - 40,
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const AdminActionTile(
+                        colors: [
+                        Color.fromARGB(255, 237, 231, 178),
+                        Color.fromARGB(255, 157, 211, 255),
+                        ], 
+                        text: 'Client Category Management'
+                      ),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.12,),
+                      const AdminActionTile(
+                        colors: [
+                        Color.fromARGB(255, 237, 231, 178),
+                        Color.fromARGB(255, 157, 211, 255),
+                        ], 
+                        text: 'Client Category Management'
+                      )
+                    ],
+                  ),
+                ),
+              )),
+              Positioned(
+              top: MediaQuery.sizeOf(context).height * 0.45,
+              child:  Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: MediaQuery.sizeOf(context).width - 40,
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const AdminActionTile(
+                        colors: [
+                        Color.fromARGB(255, 237, 231, 178),
+                        Color.fromARGB(255, 157, 211, 255),
+                        ], 
+                        text: 'Client Category Management'
+                      ),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.12,),
+                      const AdminActionTile(
+                        colors: [
+                        Color.fromARGB(255, 237, 231, 178),
+                        Color.fromARGB(255, 157, 211, 255),
+                        ], 
+                        text: 'Client Category Management'
+                      )
+                    ],
+                  ),
+                ),
+              )),
+        ],
       ),
     );
-  }
-}
-
-class CustomAppBarShape extends OutlinedBorder {
-  // Implementing the constructor allows the CustomAppBarShape to be
-  // properly compared when calling the `identical` method.
-  const CustomAppBarShape({super.side});
-
-  Path _getPath(Rect rect) {
-    final Path path = Path();
-    final Size size = Size(rect.width, rect.height * 1.5);
-
-    final double p0 = size.height * 0.75;
-    path.lineTo(0.0, p0);
-
-    final Offset controlPoint = Offset(size.width * 0.4, size.height);
-    final Offset endPoint = Offset(size.width, size.height / 2);
-    path.quadraticBezierTo(
-        controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
-
-    path.lineTo(size.width, 0.0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    return _getPath(rect.inflate(side.width));
-  }
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return _getPath(rect);
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    if (rect.isEmpty) {
-      return;
-    }
-    canvas.drawPath(
-      getOuterPath(rect, textDirection: textDirection),
-      side.toPaint(),
-    );
-  }
-
-  @override
-  ShapeBorder scale(double t) {
-    return CustomAppBarShape(side: side.scale(t));
-  }
-
-  @override
-  OutlinedBorder copyWith({BorderSide? side}) {
-    return CustomAppBarShape(side: side ?? this.side);
-  }
-
-  // The lerpFrom method is necessary for the CustomAppBarShape to be
-  // properly animated when changing the AppBar shape and when
-  // the AppBar is rebuilt.
-  @override
-  ShapeBorder? lerpFrom(ShapeBorder? a, double t) {
-    if (a is CustomAppBarShape) {
-      return CustomAppBarShape(side: BorderSide.lerp(a.side, side, t));
-    }
-    return super.lerpFrom(a, t);
-  }
-
-  // The lerpTo method is necessary for the CustomAppBarShape to be
-  // properly animated when changing the AppBar shape and when
-  // the AppBar is rebuilt.
-  @override
-  ShapeBorder? lerpTo(ShapeBorder? b, double t) {
-    if (b is CustomAppBarShape) {
-      return CustomAppBarShape(side: BorderSide.lerp(b.side, side, t));
-    }
-    return super.lerpTo(b, t);
   }
 }
