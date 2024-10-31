@@ -26,10 +26,8 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, List<String>> clientsWithCategories =
-        context.watch<ClientCategoryNotifier>().clientsWithCategories;
-    List<String> allClients =
-        context.watch<ClientCategoryNotifier>().allClients;
+    Map<String, List<String>> clientsWithCategories = context.watch<ClientCategoryNotifier>().clientsWithCategories;
+    List<String> allClients = context.watch<ClientCategoryNotifier>().allClients;
 
     bool fetchedMap = context.watch<ClientCategoryNotifier>().fetchedMap;
     bool fetchedList = context.watch<ClientCategoryNotifier>().fetchedList;

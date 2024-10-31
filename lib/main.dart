@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:oaap/access_management/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/client_category_notifier.dart';
 import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
@@ -41,6 +42,7 @@ class MainApp extends StatelessWidget {
           routes: {
             '/authGate' : (context) => const AuthGate(), //in lib>authentication>services
             '/clientCategoryManagement': (context) => const MyClientCategoryPage(),
+            '/accessManagement': (context) => const MyAccessPage(),
             '/settings':(context) => const MySettingsPage(),
           },
       );
@@ -56,6 +58,7 @@ resolved:
 1. when category or client added tou you can't see circular progress indicator kion ke context popping issue. 
 
 remaining:
+3. need to create listeners for theme in admin dashboard
 2. add koi image ya gradient background in signup login screen. 
 
 */

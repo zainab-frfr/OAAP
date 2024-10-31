@@ -15,4 +15,15 @@ class ThemeNotifier with ChangeNotifier {
 
   }
 
+  Brightness getBrightness(BuildContext context) {
+    switch (_themeMode) {
+      case ThemeMode.light:
+        return Brightness.light;
+      case ThemeMode.dark:
+        return Brightness.dark;
+      case ThemeMode.system:
+        return MediaQuery.of(context).platformBrightness;
+  }
+}
+
 }

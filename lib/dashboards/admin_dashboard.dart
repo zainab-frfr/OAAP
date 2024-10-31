@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/dashboards/widgets/admin_action_tile.dart';
+import 'package:oaap/theme/theme_notifier.dart';
+import 'package:provider/provider.dart';
 import 'widgets/my_round_appbar.dart';
 
 // ignore: must_be_immutable
-class AdminDashboard extends StatelessWidget {
-  AdminDashboard({super.key});
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({super.key});
 
+  @override
+  State<AdminDashboard> createState() => _AdminDashboardState();
+}
+
+class _AdminDashboardState extends State<AdminDashboard> {
   List<Color> colorsLight = [const Color.fromARGB(255, 208, 234, 255),const Color.fromARGB(255, 157, 211, 255),];
   List<Color> colorsDark =  [ const Color.fromARGB(255, 103, 102, 102), const Color.fromARGB(255, 59, 59, 59)];
 
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    Brightness mode = context.watch<ThemeNotifier>().getBrightness(context);
+    
     return Scaffold(
       body: Stack(
         children: [
@@ -23,7 +37,7 @@ class AdminDashboard extends StatelessWidget {
               preferredSize: const Size.fromHeight(kToolbarHeight + 20),
               child: AppBar(
                 shape: const CustomAppBarShape(),
-                backgroundColor: (MediaQuery.platformBrightnessOf(context) ==Brightness.light)
+                backgroundColor: (mode ==Brightness.light)
                     ? const Color.fromARGB(255, 81, 161, 227)
                     : const Color.fromARGB(255, 38, 37, 37),
                 elevation: 0,
@@ -49,15 +63,17 @@ class AdminDashboard extends StatelessWidget {
                     children: [
                       AdminActionTile(
                         onTap: (){},
-                        colors: (MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        colors: (mode== Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'All Tasks'
                       ),
                       SizedBox(width: MediaQuery.sizeOf(context).width * 0.12,),
                       AdminActionTile(
-                        onTap: (){},
-                        colors:(MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        onTap: (){
+                          Navigator.pushNamed(context, '/accessManagement');
+                        },
+                        colors:(mode == Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'Access Management'
@@ -77,7 +93,7 @@ class AdminDashboard extends StatelessWidget {
                     children: [
                       AdminActionTile(
                         onTap: (){},
-                        colors: (MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        colors: (mode == Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'Moderator Management'
@@ -87,7 +103,7 @@ class AdminDashboard extends StatelessWidget {
                         onTap: (){
                           Navigator.pushNamed(context, '/clientCategoryManagement');
                         },
-                        colors: (MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        colors: (mode == Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'Client Category Management'
@@ -107,7 +123,7 @@ class AdminDashboard extends StatelessWidget {
                     children: [
                       AdminActionTile(
                         onTap: (){},
-                        colors: (MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        colors: (mode == Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'Performance Reports'
@@ -117,7 +133,7 @@ class AdminDashboard extends StatelessWidget {
                         onTap: (){
                           Navigator.pushNamed(context, '/settings');
                         },
-                        colors:(MediaQuery.platformBrightnessOf(context) == Brightness.light)
+                        colors:(mode == Brightness.light)
                         ? colorsLight
                         : colorsDark,
                         text: 'Settings'
