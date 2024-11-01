@@ -10,7 +10,10 @@ import 'package:oaap/theme/theme_notifier.dart';
 import 'package:oaap/theme/ui_components/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-
+/*
+  1. add koi image ya gradient background in signup login screen. 
+  2. need to create client ka model
+*/
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); //uses the firebase_options.dart in lib
@@ -50,15 +53,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
-/*
-stuff left
-
-resolved:   
-1. when category or client added tou you can't see circular progress indicator kion ke context popping issue. 
-
-remaining:
-3. need to create listeners for theme in admin dashboard
-2. add koi image ya gradient background in signup login screen. 
-
-*/

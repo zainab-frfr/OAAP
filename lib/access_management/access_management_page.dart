@@ -42,12 +42,18 @@ class _MyAccessPageState extends State<MyAccessPage> {
                     title: Text('Client 1'),
                   );
                 },
-                body: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Category 1'),
-                    Text('Category 2'),
-                  ],
+                body:const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child:  Align(
+                    alignment: Alignment.topLeft, 
+                    child: Column(
+                      children: [
+                        Text('category 1'),
+                        Text('category 2'),
+                        Text('category 3'),
+                      ],
+                    )
+                  ),
                 ),
                 isExpanded: _isExpanded[0],
               ),
@@ -58,7 +64,7 @@ class _MyAccessPageState extends State<MyAccessPage> {
                   );
                 },
                 body: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(0.0),
                   child: Text('This is the content of Panel 2.'),
                 ),
                 isExpanded: _isExpanded[1],

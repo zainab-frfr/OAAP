@@ -3,10 +3,13 @@ import 'package:oaap/authentication/services/auth_service.dart';
 import 'package:oaap/client_category_management/ui_components/my_elevated_button.dart';
 
 class MyLogoutButton extends StatelessWidget {
-  const MyLogoutButton({super.key});
+  final GlobalKey<ScaffoldState> scaffoldState;
+
+  const MyLogoutButton({super.key, required this.scaffoldState});
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
       child: Material(
@@ -41,7 +44,7 @@ class MyLogoutButton extends StatelessWidget {
                                 Navigator.pop(context);
                                 await AuthService().signOut();
                                 // ignore: use_build_context_synchronously
-                                Navigator.popAndPushNamed(context, '/authGate');
+                                Navigator.popAndPushNamed(scaffoldState.currentContext!, '/authGate');
                               })
                         ],
                       )

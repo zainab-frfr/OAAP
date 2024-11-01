@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/client_category_management/ui_components/category_chips.dart';
+import 'package:oaap/global%20widgets/category_chips.dart';
 
 class ClientCategoryTile extends StatelessWidget {
   final String client;
@@ -68,7 +68,7 @@ class ClientCategoryTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: CategoryChips(categories: categories,)),
+                      child: MyChips(items: categories,)),
                 ),
               ],
             ),

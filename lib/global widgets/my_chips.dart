@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class CategoryChips extends StatelessWidget {
-  final List<String> categories;
+class MyChips extends StatelessWidget {
+  final List<String> items;
 
-  const CategoryChips({super.key, required this.categories});
+  const MyChips({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 8.0, 
       runSpacing: 4.0,
-      children: categories.map((category) => returnChip(category)).toList(),
+      children: items.map((item) => returnChip(item)).toList(),
     );
   }
 }
@@ -27,7 +27,7 @@ Color randomBlueShade() {
   );
 }
 
-Chip returnChip(String payID) {
+Chip returnChip(String text) {
   return Chip(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20),
@@ -38,7 +38,7 @@ Chip returnChip(String payID) {
     backgroundColor:
         randomBlueShade().withOpacity(0.2),
     label: Text(
-      payID,
+      text,
       style: const TextStyle(fontSize: 10),
     ),
   );

@@ -7,14 +7,18 @@ class MySettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: scaffoldState,
       appBar: AppBar(
         title: const Text('Settings', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          MyThemeTile(),
-          MyLogoutButton()
+          const MyThemeTile(),
+          MyLogoutButton(scaffoldState: scaffoldState,)
         ],
       ),
     );
