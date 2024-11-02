@@ -52,7 +52,13 @@ class ClientCategoryNotifier extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _store.collection("Clients").doc(client).collection("Categories").doc(category).delete();
+      var categoryRef = _store.collection("Clients").doc(client).collection("Categories").doc(category);
+      var accessSnapshot = await categoryRef.collection("Access").get(); // get everybody who has access to that category
+      for (var accessDoc in accessSnapshot.docs) { 
+        await accessDoc.reference.delete(); // delete everybody who has access to that category
+      }
+      await categoryRef.delete(); // deleting the category
+
       await retrieveClientsCategories();
       await getAllClients();
       _fetchedMap = true;
@@ -102,7 +108,17 @@ class ClientCategoryNotifier extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _store.collection("Clients").doc(client).delete();
+      var categoriesSnapshot = await _store.collection("Clients").doc(client).collection("Categories").get();
+       
+      for (var categoryDoc in categoriesSnapshot.docs) { // for each category
+        var categoryRef = categoryDoc.reference;
+        var accessSnapshot = await categoryRef.collection("Access").get(); //get all those who have access
+        for (var accessDoc in accessSnapshot.docs) {
+          await accessDoc.reference.delete(); // deleting everybody who has access
+        }
+        await categoryRef.delete(); // deleting category 
+      }
+      await _store.collection("Clients").doc(client).delete(); // deleting the client 
       await retrieveClientsCategories();
       await getAllClients();
       _fetchedMap = true;

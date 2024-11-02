@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/access_management/model/client_cat_acc_model.dart';
-import 'package:oaap/access_management/network/access_notifier.dart';
-import 'package:oaap/global%20widgets/my_chips.dart';
+import 'package:oaap/access_management/provider/access_notifier.dart';
+import 'package:oaap/global/global%20widgets/my_chips.dart';
 import 'package:provider/provider.dart';
 
 class ViewAccessPage extends StatefulWidget {

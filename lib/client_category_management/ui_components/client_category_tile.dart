@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/global%20widgets/my_chips.dart';
+import 'package:oaap/global/global%20widgets/my_chips.dart';
 
 class ClientCategoryTile extends StatelessWidget {
   final String client;

@@ -13,7 +13,6 @@ class MyAccessPage extends StatefulWidget {
 
 class _MyAccessPageState extends State<MyAccessPage> {
   int currentPageIndex = 0;
-  final List<bool> _isExpanded = [false, false, false];
 
   @override
   Widget build(BuildContext context) {

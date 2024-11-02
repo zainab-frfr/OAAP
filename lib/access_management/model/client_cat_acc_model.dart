@@ -2,25 +2,30 @@ class ClientCategoryAccess {
 
   final String client;
   final Map<String,List<String>> categoryAccess;
+  final List<String> categories;
 
   ClientCategoryAccess({
     required this.client,
     required this.categoryAccess,
+    required this.categories
   });
 
   factory ClientCategoryAccess.fromJson(String clientName, Map<String, dynamic> fetchedData) {
     // clientName: This represents the document ID for the client aka client ka naam 
     // fetchedData: keys are category names, values are a list of people with access  
     
-    Map<String, List<String>> categories = {};
+    Map<String, List<String>> categoriesWithAccess = {};
+    List<String> categories = [];
 
     fetchedData.forEach((categoryName, accessList) { //for every category 
-      categories[categoryName] = List<String>.from(accessList);
+      categories.add(categoryName);
+      categoriesWithAccess[categoryName] = List<String>.from(accessList);
     });
 
     return ClientCategoryAccess(
       client: clientName,
-      categoryAccess: categories,
+      categoryAccess: categoriesWithAccess,
+      categories: categories,
     );
   }
 
@@ -28,6 +33,7 @@ class ClientCategoryAccess {
   String toString() {
     StringBuffer sb = StringBuffer();
     sb.writeln('Client: $client');
+    sb.writeln('Categories: $categories');
     categoryAccess.forEach((category, accessList) {
       sb.writeln('  Category: $category');
       sb.writeln('    Access: ${accessList.join(", ")}');

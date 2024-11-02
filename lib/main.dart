@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oaap/access_management/network/access_notifier.dart';
 import 'package:oaap/access_management/ui_components/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
-import 'package:oaap/client_category_management/client_category_notifier.dart';
+import 'package:oaap/global/global%20notifiers/client_category_notifier.dart';
 import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
 import 'package:oaap/settings/theme_model.dart';
