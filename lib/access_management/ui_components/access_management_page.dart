@@ -199,7 +199,7 @@ class _MyAccessPageState extends State<MyAccessPage> {
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           elevation: 2.0,
           onDestinationSelected: (int index) {
             setState(() {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:oaap/access_management/model/client_cat_acc_model.dart';
+import 'package:oaap/access_management/models/client_cat_acc_model.dart';
 
 class AccessNotifier extends ChangeNotifier{
   
@@ -44,4 +44,40 @@ class AccessNotifier extends ChangeNotifier{
       throw Exception("Failed to fetch access data: $e");
     }
   }
+
+  Future<String> grantAccess(String client, String category, String email) async{
+    _fetchedAccess = false;
+    notifyListeners();
+    try{
+      await _store.collection('Clients').doc(client)
+      .collection('Categories').doc(category)
+      .collection('Access').doc(email).set({});
+
+      await getAccess();
+      _fetchedAccess = true;
+      notifyListeners();
+      return '${email.split('@')[0]} granted access to $category under $client.';
+    } catch (e){
+      return 'Error granting access. Please try again later.';
+    }
+  }
+
+  Future<String> revokeAccess(String client, String category, String email) async {
+    _fetchedAccess = false;
+    notifyListeners();
+    try {
+      await _store.collection('Clients').doc(client)
+      .collection('Categories').doc(category)
+      .collection('Access').doc(email).delete();
+
+      await getAccess();
+      _fetchedAccess = true;
+      notifyListeners();
+
+      return '${email.split('@')[0]} access to $category under $client has been revoked.';
+    } catch (e) {
+      return 'Error revoking access. Please try again later.';
+    }
+  }
+
 }

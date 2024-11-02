@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:oaap/access_management/network/access_notifier.dart';
+import 'package:oaap/access_management/provider/access_notifier.dart';
+import 'package:oaap/access_management/provider/user_notifier.dart';
 import 'package:oaap/access_management/ui_components/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
-import 'package:oaap/global/global%20notifiers/client_category_notifier.dart';
+import 'package:oaap/client_category_management/ui_components/client_category_notifier.dart';
 import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
 import 'package:oaap/settings/theme_model.dart';
@@ -16,6 +17,10 @@ import 'package:flutter/services.dart';
   2. need to create client ka model
 
   3. during deletion  of client delete all fields within document also lolsies
+  4. if i click on access management and foran click on grant/revoke access tou exception
+  
+  5. access mein ALL acess
+  6. access mein check if aready has access
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +31,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),//underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
         ChangeNotifierProvider(create: (_) => ClientCategoryNotifier()),
-        ChangeNotifierProvider(create: (_) => AccessNotifier())
+        ChangeNotifierProvider(create: (_) => AccessNotifier()),
+        ChangeNotifierProvider(create: (_) => UserNotifier())
       ],
       child: const MainApp(),
     )

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/access_management/model/client_cat_acc_model.dart';
+import 'package:oaap/access_management/models/client_cat_acc_model.dart';
 import 'package:oaap/access_management/provider/access_notifier.dart';
 import 'package:oaap/global/global%20widgets/my_chips.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +19,12 @@ class _ViewAccessPageState extends State<ViewAccessPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       //executes after widget is built
       await context.read<AccessNotifier>().getAccess();
-      setState(() {
-        _isExpanded = List<bool>.filled(
-          context.read<AccessNotifier>().accessList.length, 
-          false,
-        );
-      });
+
+      _isExpanded = List<bool>.filled(
+        // ignore: use_build_context_synchronously
+        context.read<AccessNotifier>().accessList.length, 
+        false,
+      );
     });
     super.initState();
   }
@@ -68,7 +68,7 @@ class _ViewAccessPageState extends State<ViewAccessPage> {
                     title: Text(
                       modelInstance.client,
                       style: TextStyle(
-                          fontWeight: (_isExpanded[2])
+                          fontWeight: (_isExpanded[index])
                               ? FontWeight.bold
                               : FontWeight.normal),
                     ),
