@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/client_category_management/ui_components/client_category_tile.dart';
-import 'package:oaap/client_category_management/ui_components/my_elevated_button.dart';
+import 'package:oaap/global%20widgets/my_elevated_button.dart';
 import 'package:oaap/client_category_management/client_category_notifier.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/authentication/services/auth_service.dart';
-import 'package:oaap/client_category_management/ui_components/my_elevated_button.dart';
+import 'package:oaap/global%20widgets/my_elevated_button.dart';
 
 class MyLogoutButton extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldState;

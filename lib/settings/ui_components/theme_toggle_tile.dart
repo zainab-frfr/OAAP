@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/theme/theme_notifier.dart';
+import 'package:oaap/settings/theme_notifier.dart';
 import 'package:provider/provider.dart';
 
 class MyThemeTile extends StatelessWidget {

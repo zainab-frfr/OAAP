@@ -1,18 +1,21 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:oaap/access_management/access_management_page.dart';
+import 'package:oaap/access_management/network/access_notifier.dart';
+import 'package:oaap/access_management/ui_components/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/client_category_notifier.dart';
 import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
-import 'package:oaap/theme/theme_model.dart';
-import 'package:oaap/theme/theme_notifier.dart';
-import 'package:oaap/theme/ui_components/settings_page.dart';
+import 'package:oaap/settings/theme_model.dart';
+import 'package:oaap/settings/theme_notifier.dart';
+import 'package:oaap/settings/ui_components/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 /*
   1. add koi image ya gradient background in signup login screen. 
   2. need to create client ka model
+
+  3. during deletion  of client delete all fields within document also lolsies
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +25,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),//underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
-        ChangeNotifierProvider(create: (_) => ClientCategoryNotifier())
+        ChangeNotifierProvider(create: (_) => ClientCategoryNotifier()),
+        ChangeNotifierProvider(create: (_) => AccessNotifier())
       ],
       child: const MainApp(),
     )

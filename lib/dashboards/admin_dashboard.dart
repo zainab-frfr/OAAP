@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/dashboards/widgets/admin_action_tile.dart';
-import 'package:oaap/theme/theme_notifier.dart';
+import 'package:oaap/settings/theme_notifier.dart';
 import 'package:provider/provider.dart';
 import 'widgets/my_round_appbar.dart';
 
