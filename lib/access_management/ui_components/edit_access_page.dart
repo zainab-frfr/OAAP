@@ -29,7 +29,7 @@ class _EditAccessPageState extends State<EditAccessPage> {
       await Provider.of<UserNotifier>(context, listen: false).getUsers();
       // Set the selected client after data is fetched
       setState(() {
-        selectedClient = accessNotifier.accessList[0].client;
+        selectedClient = [ClientCategoryAccess(client: 'All', categoryAccess: {}, categories: ['All']), ...accessNotifier.accessList][0].client;
         selectedCategory = accessNotifier.accessList[0].categories[0];
         selectedUser = Provider.of<UserNotifier>(context, listen: false).allUsers[0].username;
       });
@@ -66,8 +66,8 @@ class _EditAccessPageState extends State<EditAccessPage> {
                             isDense: true,
                             decoration: const InputDecoration(border: InputBorder.none),
                             enableFeedback: true,
-                            value: accessList[0].client,
-                            items: accessList.map((entry) {
+                            value: [ClientCategoryAccess(client: 'All', categoryAccess: {}, categories: ['All']), ...accessList][0].client,
+                            items: [ClientCategoryAccess(client: 'All', categoryAccess: {}, categories: ['All']), ...accessList].map((entry) {
                               return DropdownMenuItem(
                                   value: entry.client,
                                   child: Text(entry.client));
@@ -91,7 +91,8 @@ class _EditAccessPageState extends State<EditAccessPage> {
                             decoration:
                                 const InputDecoration(border: InputBorder.none),
                             enableFeedback: true,
-                            value: accessList
+                            value: ['All', 
+                              ...accessList
                                 .firstWhere(
                                   (element) => element.client == selectedClient,
                                   orElse: () => ClientCategoryAccess(
@@ -99,8 +100,9 @@ class _EditAccessPageState extends State<EditAccessPage> {
                                       categoryAccess: {},
                                       categories: ['no categories']),
                                 )
-                                .categories[0],
-                            items: accessList
+                                .categories][0],
+                            items: ['All', 
+                              ...accessList
                                 .firstWhere(
                                   (element) => element.client == selectedClient,
                                   orElse: () => ClientCategoryAccess(
@@ -108,7 +110,7 @@ class _EditAccessPageState extends State<EditAccessPage> {
                                       categoryAccess: {},
                                       categories: ['no categories']),
                                 )
-                                .categories
+                                .categories]
                                 .map((entry) {
                               return DropdownMenuItem(
                                   value: entry, child: Text(entry));

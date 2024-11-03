@@ -19,8 +19,11 @@ import 'package:flutter/services.dart';
   3. during deletion  of client delete all fields within document also lolsies
   4. if i click on access management and foran click on grant/revoke access tou exception
   
-  5. access mein ALL acess
+  5. access mein ALL acesss
   6. access mein check if aready has access
+  7. also view access page par poori email arahi hai boss (insert cri)
+
+  8. view access screen par chips are changing color randomly
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
