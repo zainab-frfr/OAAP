@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/settings/ui_components/logout_button.dart';
-import 'package:oaap/settings/ui_components/theme_toggle_tile.dart';
+import 'package:oaap/settings/ui/widgets/logout_button.dart';
+import 'package:oaap/settings/ui/widgets/theme_toggle_tile.dart';
 
 class MySettingsPage extends StatelessWidget {
   const MySettingsPage({super.key});

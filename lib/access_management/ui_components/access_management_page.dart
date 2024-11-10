@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oaap/access_management/ui_components/edit_access_page.dart';
 import 'package:oaap/access_management/ui_components/view_access_page.dart';
-import 'package:oaap/settings/theme_notifier.dart';
+import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:provider/provider.dart';
 
 class MyAccessPage extends StatefulWidget {
@@ -14,9 +14,17 @@ class MyAccessPage extends StatefulWidget {
 class _MyAccessPageState extends State<MyAccessPage> {
   int currentPageIndex = 0;
 
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if(context.watch<ThemeBloc>().state.themeString == 'System Theme'){
+      context.read<ThemeBloc>().add(ThemeChanged(theme: 'System Theme', context: context));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Brightness mode = context.watch<ThemeNotifier>().getBrightness(context);
+    Brightness mode = context.select((ThemeBloc bloc) => bloc.state.brightness);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,165 +41,6 @@ class _MyAccessPageState extends State<MyAccessPage> {
       body: <Widget>[
         // view access
         const ViewAccessPage(),
-        // ListView(
-        //   children: [
-        //     ExpansionPanelList(
-        //       animationDuration: const Duration(milliseconds: 500),
-        //       expansionCallback: (int index, bool isExpanded) {
-        //         setState(() {
-        //           _isExpanded[index] = isExpanded;
-        //         });
-        //       },
-        //       children: [
-        //         ExpansionPanel(
-        //           headerBuilder: (BuildContext context, bool isExpanded) {
-        //             return ListTile(
-        //               title: Text(
-        //                 'Client 1',
-        //                 style: TextStyle(
-        //                     fontWeight: (_isExpanded[0])
-        //                         ? FontWeight.bold
-        //                         : FontWeight.normal),
-        //               ),
-        //             );
-        //           },
-        //           body: const Padding(
-        //             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        //             child: Align(
-        //                 alignment: Alignment.topLeft,
-        //                 child: Column(
-        //                   crossAxisAlignment: CrossAxisAlignment.start,
-        //                   children: [
-        //                     Text('category 1'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'zainab@gmail.com'
-        //                       ],
-        //                     ),
-        //                     SizedBox(
-        //                       height: 10,
-        //                     ),
-        //                     Text('category 2'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com'
-        //                       ],
-        //                     ),
-        //                     SizedBox(
-        //                       height: 10,
-        //                     ),
-        //                     Text('category 3'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com'
-        //                       ],
-        //                     ),
-        //                   ],
-        //                 )),
-        //           ),
-        //           isExpanded: _isExpanded[0],
-        //         ),
-        //         ExpansionPanel(
-        //           headerBuilder: (BuildContext context, bool isExpanded) {
-        //             return ListTile(
-        //               title: Text(
-        //                 'Client 2',
-        //                 style: TextStyle(
-        //                     fontWeight: (_isExpanded[1])
-        //                         ? FontWeight.bold
-        //                         : FontWeight.normal),
-        //               ),
-        //             );
-        //           },
-        //           body: const Padding(
-        //             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        //             child: Align(
-        //                 alignment: Alignment.topLeft,
-        //                 child: Column(
-        //                   crossAxisAlignment: CrossAxisAlignment.start,
-        //                   children: [
-        //                     Text('category 1'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'zainab@gmail.com'
-        //                       ],
-        //                     ),
-        //                     SizedBox(
-        //                       height: 10,
-        //                     ),
-        //                     Text('category 2'),
-        //                     MyChips(
-        //                       items: ['ambar@gmail.com', 'aun@gmail.com'],
-        //                     ),
-        //                   ],
-        //                 )),
-        //           ),
-        //           isExpanded: _isExpanded[1],
-        //         ),
-        //         ExpansionPanel(
-        //           headerBuilder: (BuildContext context, bool isExpanded) {
-        //             return ListTile(
-        //               title: Text(
-        //                 'Client 3',
-        //                 style: TextStyle(
-        //                     fontWeight: (_isExpanded[2])
-        //                         ? FontWeight.bold
-        //                         : FontWeight.normal),
-        //               ),
-        //             );
-        //           },
-        //           body: const Padding(
-        //             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        //             child: Align(
-        //                 alignment: Alignment.topLeft,
-        //                 child: Column(
-        //                   crossAxisAlignment: CrossAxisAlignment.start,
-        //                   children: [
-        //                     Text('category 1'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com'
-        //                       ],
-        //                     ),
-        //                     SizedBox(
-        //                       height: 10,
-        //                     ),
-        //                     Text('category 2'),
-        //                     MyChips(
-        //                       items: [
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com',
-        //                         'ambar@gmail.com',
-        //                         'aun@gmail.com'
-        //                       ],
-        //                     ),
-        //                   ],
-        //                 )),
-        //           ),
-        //           isExpanded: _isExpanded[2],
-        //         ),
-        //       ],
-        //     ),
-        //   ],
-        // ),
-
         // edit access
         const EditAccessPage(),
 

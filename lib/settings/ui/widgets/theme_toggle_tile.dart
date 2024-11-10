@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/settings/theme_notifier.dart';
+import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:provider/provider.dart';
 
 class MyThemeTile extends StatelessWidget {
@@ -7,8 +7,7 @@ class MyThemeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
-
+    String valueOfFormField = context.select((ThemeBloc bloc) => bloc.state.themeString);
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Material(
@@ -30,29 +29,26 @@ class MyThemeTile extends StatelessWidget {
                         border: InputBorder.none
                       ),
                       enableFeedback: true,
-                      value: themeNotifier.themeMode == ThemeMode.system
-                        ? 'System Theme'
-                        : themeNotifier.themeMode == ThemeMode.light
-                            ? 'Light Theme'
-                            : 'Dark Theme',
+                      value: valueOfFormField,
                       items: const [
                         DropdownMenuItem(value: 'System Theme' , child: Text('System Theme', overflow: TextOverflow.ellipsis,)),
                         DropdownMenuItem(value: 'Light Theme' , child: Text('Light Theme', overflow: TextOverflow.ellipsis,)),
                         DropdownMenuItem(value: 'Dark Theme' , child: Text('Dark Theme', overflow: TextOverflow.ellipsis,)),
                       ], 
                       onChanged: (value) {
-                        switch (value) {
-                          case 'System Theme':
-                            themeNotifier.setTheme(ThemeMode.system);
-                            break;  
-                          case 'Light Theme':
-                            themeNotifier.setTheme(ThemeMode.light);
-                            break;  
-                          case 'Dark Theme':
-                            themeNotifier.setTheme(ThemeMode.dark);
-                            break;  
-                          default:
-                        }
+                        // switch (value) {
+                        //   case 'System Theme':
+                        //     themeNotifier.setTheme(ThemeMode.system);
+                        //     break;  
+                        //   case 'Light Theme':
+                        //     themeNotifier.setTheme(ThemeMode.light);
+                        //     break;  
+                        //   case 'Dark Theme':
+                        //     themeNotifier.setTheme(ThemeMode.dark);
+                        //     break;  
+                        //   default:
+                        //}
+                        context.read<ThemeBloc>().add(ThemeChanged(theme: value!, context: context));
                       },
                     ),
                   ),
