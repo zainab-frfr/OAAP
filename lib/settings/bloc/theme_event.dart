@@ -6,6 +6,7 @@ sealed class ThemeEvent{
 
 final class ThemeChanged extends ThemeEvent{
   final String theme; // values may be 'System Theme', 'Light Theme', 'Dark Theme'
-  final BuildContext context;
+  final BuildContext? context;
+
   const ThemeChanged({required this.theme, required this.context});
 }
