@@ -25,8 +25,8 @@ class ThemeBloc extends Bloc<ThemeEvent,ThemeState> {
 
     switch (event.theme) {
       case 'System Theme':
-        Brightness brightness = MediaQuery.of(event.context!).platformBrightness;
-        emit(ThemeSystem(ThemeMode.system,brightness, event.theme));
+        //Brightness brightness = MediaQuery.of(event.context!).platformBrightness;
+        emit(ThemeSystem(ThemeMode.system,Brightness.light, event.theme));
         break;  
       case 'Light Theme':
         emit(ThemeLight(ThemeMode.light,Brightness.light, event.theme));

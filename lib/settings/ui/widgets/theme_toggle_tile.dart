@@ -36,18 +36,6 @@ class MyThemeTile extends StatelessWidget {
                         DropdownMenuItem(value: 'Dark Theme' , child: Text('Dark Theme', overflow: TextOverflow.ellipsis,)),
                       ], 
                       onChanged: (value) {
-                        // switch (value) {
-                        //   case 'System Theme':
-                        //     themeNotifier.setTheme(ThemeMode.system);
-                        //     break;  
-                        //   case 'Light Theme':
-                        //     themeNotifier.setTheme(ThemeMode.light);
-                        //     break;  
-                        //   case 'Dark Theme':
-                        //     themeNotifier.setTheme(ThemeMode.dark);
-                        //     break;  
-                        //   default:
-                        //}
                         context.read<ThemeBloc>().add(ThemeChanged(theme: value!, context: context));
                       },
                     ),

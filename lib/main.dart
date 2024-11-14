@@ -5,8 +5,8 @@ import 'package:oaap/access_management/provider/access_notifier.dart';
 import 'package:oaap/access_management/provider/user_notifier.dart';
 import 'package:oaap/access_management/ui_components/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
-import 'package:oaap/client_category_management/ui_components/client_category_notifier.dart';
-import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
+import 'package:oaap/client_category_management/bloc/cc_bloc.dart';
+import 'package:oaap/client_category_management/ui/view/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
 import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:oaap/settings/data/current_theme.dart';
@@ -39,7 +39,6 @@ void main() async {
   await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => ClientCategoryNotifier()), //underscore is used as a placeholder for unused/ignored parameters (BuildContext in this case)
       ChangeNotifierProvider(create: (_) => AccessNotifier()),
       ChangeNotifierProvider(create: (_) => UserNotifier())
     ],
@@ -54,8 +53,15 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final String prevTheme = CurrentTheme().themeString;
 
-    return BlocProvider(
-        create: (_) => ThemeBloc(),
+    return MultiBlocProvider( 
+        providers: [
+          BlocProvider<ThemeBloc>(
+            create: (_) => ThemeBloc(),
+          ),
+          BlocProvider<ClientCategoryBloc>(
+            create: (_) => ClientCategoryBloc(),
+          ),
+        ],
         child: Builder(
           builder: (context) {
             final themeMode = context.select((ThemeBloc bloc) => bloc.state.themeMode);

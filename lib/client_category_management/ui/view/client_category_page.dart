@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/client_category_management/ui_components/client_category_tile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oaap/client_category_management/bloc/cc_bloc.dart';
+import 'package:oaap/client_category_management/data/client_category_model.dart';
+import 'package:oaap/client_category_management/ui/widgets/client_category_tile.dart';
 import 'package:oaap/global/global%20widgets/my_elevated_button.dart';
-import 'package:oaap/client_category_management/ui_components/client_category_notifier.dart';
-import 'package:provider/provider.dart';
 
 class MyClientCategoryPage extends StatefulWidget {
   const MyClientCategoryPage({super.key});
@@ -17,23 +18,16 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //executes after widget is built
-      context.read<ClientCategoryNotifier>().getAllClients();
-      context.read<ClientCategoryNotifier>().retrieveClientsCategories();
+      context.read<ClientCategoryBloc>().add(FetchClientCategory());
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, List<String>> clientsWithCategories = context.watch<ClientCategoryNotifier>().clientsWithCategories;
-    List<String> allClients = context.watch<ClientCategoryNotifier>().allClients;
-
-    bool fetchedMap = context.watch<ClientCategoryNotifier>().fetchedMap;
-    bool fetchedList = context.watch<ClientCategoryNotifier>().fetchedList;
 
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           title: const Padding(
             padding: EdgeInsets.symmetric(
@@ -83,53 +77,86 @@ class _MyClientCategoryPageState extends State<MyClientCategoryPage> {
             ),
           ],
         ),
-        body: (fetchedList && fetchedMap)
-            ? ListView.builder(
-                itemCount: allClients.length + 1,
-                itemBuilder: (context, index) {
-                  if (allClients.isNotEmpty) {
-                    if (index < allClients.length) {
-                      String client = allClients[index];
-                      List<String> categories =
-                          clientsWithCategories[client] ?? [];
-
-                      return Column(
-                        children: [
-                          ClientCategoryTile(
-                            client: client,
-                            categories: categories,
-                            onTap: (String value) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return _manageCategory(
-                                        context, client, value, _scaffoldKey);
-                                  },
-                                );
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          )
-                        ],
-                      );
-                    } else {
-                      return const SizedBox(height: 50);
-                    }
-                  } else {
-                    return null;
-                  }
-                },
-              )
-            : const Center(
+        body: BlocListener<ClientCategoryBloc, ClientCategoryState>(
+            listener: (context, state) {
+          if (state is ClientCategoryPopUpMessage) {
+            // Show success snackbar when the data is fetched
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(state.message),
+            ));
+          }
+        }, child: BlocBuilder<ClientCategoryBloc, ClientCategoryState>(
+                builder: (context, state) {
+          switch (state) {
+            case LoadingClientCategory():
+              return const Center(
                 child: CircularProgressIndicator(),
-              ));
+              );
+            case FetchedClientCategory():
+              return (state.clientsAndCategories.isNotEmpty)
+                  ? ListView.builder(
+                      itemCount: state.clientsAndCategories.length + 1,
+                      itemBuilder: (context, index) {
+                        //if (state.clientsAndCategories.isNotEmpty) {
+                        if (index < state.clientsAndCategories.length) {
+                          ClientCategoryModel modelInstance =
+                              state.clientsAndCategories[index];
+                          List<String> categories = modelInstance.categories;
+
+                          return Column(
+                            children: [
+                              ClientCategoryTile(
+                                client: modelInstance.client,
+                                categories: categories,
+                                onTap: (String value) {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return _manageCategory(
+                                            context,
+                                            modelInstance.client,
+                                            value,
+                                            _scaffoldKey);
+                                      },
+                                    );
+                                  });
+                                },
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              )
+                            ],
+                          );
+                        } else {
+                          return null;
+                        }
+                      },
+                    )
+                  : const Center(
+                      child: Text('No clients and categories found.'),
+                    );
+
+            case ClientCategoryError():
+              return Center(
+                child: Text(state.error),
+              );
+            case ClientCategoryPopUpMessage():
+              context.read<ClientCategoryBloc>().add(FetchClientCategory());
+              return Container();
+            default:
+              return const Center(
+                child: Text('Error retrieving information'),
+              );
+          }
+        })));
   }
 }
 
-AlertDialog _manageClient(BuildContext context, String toDo, GlobalKey<ScaffoldState> scaffoldKey) {
+AlertDialog _manageClient(
+    BuildContext context, String toDo, GlobalKey<ScaffoldState> scaffoldKey) {
   final TextEditingController companyController = TextEditingController();
 
   return AlertDialog(
@@ -159,20 +186,10 @@ AlertDialog _manageClient(BuildContext context, String toDo, GlobalKey<ScaffoldS
               height: 40,
               child: const Text('Ok'),
               onTap: () async {
-                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
-
-                String message = (toDo == 'add')
-                    // ignore: use_build_context_synchronously
-                    ? await context
-                        .read<ClientCategoryNotifier>()
-                        .addClientToFirestore(companyController.text)
-                    // ignore: use_build_context_synchronously
-                    : await context
-                        .read<ClientCategoryNotifier>()
-                        .deleteClientFromFirestore(companyController.text);
-                // ignore: use_build_context_synchronously
-                showSnackbar(scaffoldKey.currentContext!, message);
+                (toDo == 'add')
+                    ? context.read<ClientCategoryBloc>().add(AddClient(client: companyController.text))
+                    : context.read<ClientCategoryBloc>().add(RemoveClient(client: companyController.text));
               })
         ],
       )
@@ -180,7 +197,8 @@ AlertDialog _manageClient(BuildContext context, String toDo, GlobalKey<ScaffoldS
   );
 }
 
-AlertDialog _manageCategory(BuildContext context, String client, String toDo, GlobalKey<ScaffoldState> scaffoldKey ) {
+AlertDialog _manageCategory(BuildContext context, String client, String toDo,
+    GlobalKey<ScaffoldState> scaffoldKey) {
   final TextEditingController categoryController = TextEditingController();
 
   return AlertDialog(
@@ -210,33 +228,13 @@ AlertDialog _manageCategory(BuildContext context, String client, String toDo, Gl
               height: 40,
               child: const Text('Ok'),
               onTap: () async {
-                // ignore: use_build_context_synchronously
                 Navigator.pop(context);
-
-                String message = (toDo == 'add')
-                    // ignore: use_build_context_synchronously
-                    ? await context
-                        .read<ClientCategoryNotifier>()
-                        .addCategoryForAClientToFirestore(
-                            categoryController.text, client)
-                    // ignore: use_build_context_synchronously
-                    : await context
-                        .read<ClientCategoryNotifier>()
-                        .deleteCategoryFromFirestore(
-                            categoryController.text, client);
-                // ignore: use_build_context_synchronously
-                showSnackbar(scaffoldKey.currentContext!, message);
+                (toDo == 'add')
+                    ? context.read<ClientCategoryBloc>().add(AddCategoryToClient(category: categoryController.text, client: client))
+                    : context.read<ClientCategoryBloc>().add(RemoveCategoryFromClient(category: categoryController.text, client: client));
               })
         ],
       )
     ],
   );
-}
-
-void showSnackbar(BuildContext context, String message) {
-  SnackBar snackBar = SnackBar(
-    behavior: SnackBarBehavior.floating,
-    content: Text(message),
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
