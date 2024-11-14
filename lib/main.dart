@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oaap/access_management/provider/access_notifier.dart';
-import 'package:oaap/access_management/provider/user_notifier.dart';
-import 'package:oaap/access_management/ui_components/access_management_page.dart';
+import 'package:oaap/access_management/bloc/access_bloc.dart';
+import 'package:oaap/access_management/ui/views/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/bloc/cc_bloc.dart';
 import 'package:oaap/client_category_management/ui/view/client_category_page.dart';
@@ -12,7 +11,6 @@ import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:oaap/settings/data/current_theme.dart';
 import 'package:oaap/settings/data/theme.dart';
 import 'package:oaap/settings/ui/view/settings_page.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 /*
@@ -37,13 +35,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
   await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => AccessNotifier()),
-      ChangeNotifierProvider(create: (_) => UserNotifier())
-    ],
-    child: const MainApp(),
-  ));
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -60,6 +52,9 @@ class MainApp extends StatelessWidget {
           ),
           BlocProvider<ClientCategoryBloc>(
             create: (_) => ClientCategoryBloc(),
+          ),
+          BlocProvider<AccessBloc>(
+            create: (_) => AccessBloc(),
           ),
         ],
         child: Builder(

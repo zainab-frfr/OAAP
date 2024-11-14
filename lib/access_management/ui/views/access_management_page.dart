@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:oaap/access_management/ui_components/edit_access_page.dart';
-import 'package:oaap/access_management/ui_components/view_access_page.dart';
+import 'package:oaap/access_management/ui/views/edit_access_page.dart';
+import 'package:oaap/access_management/ui/views/view_access_page.dart';
 import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:provider/provider.dart';
 
