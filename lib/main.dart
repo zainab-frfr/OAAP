@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 
 /*
   1. add koi image ya gradient background in signup login screen. 
-  2. need to create client ka model
 
   3. during deletion  of client delete all fields within document also lolsies
   4. if i click on access management and foran click on grant/revoke access tou exception

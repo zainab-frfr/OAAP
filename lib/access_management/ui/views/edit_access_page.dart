@@ -23,6 +23,8 @@ class _EditAccessPageState extends State<EditAccessPage> {
   @override
   void initState() {
     super.initState();
+    selectedClient = 'All';
+    selectedCategory = 'All';
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       //final accessNotifier = Provider.of<AccessNotifier>(context, listen: false);
 
@@ -35,9 +37,8 @@ class _EditAccessPageState extends State<EditAccessPage> {
       //   selectedCategory = accessNotifier.accessList[0].categories[0];
       //   selectedUser = Provider.of<UserNotifier>(context, listen: false).allUsers[0].username;
       // });
-      context
-          .read<AccessBloc>()
-          .add(const FetchEmployeesAndAccessInformation());
+      context.read<AccessBloc>().add(const FetchEmployeesAndAccessInformation());
+
     });
   }
 
@@ -65,10 +66,7 @@ class _EditAccessPageState extends State<EditAccessPage> {
               child: CircularProgressIndicator(),
             );
           case FetchedEmployeesAndAccessInformation():
-            selectedClient = 'All';
-            selectedCategory = 'All';
             selectedUser =  state.allUsers[0].username;
-
             return Center(
               child: Card(
                 elevation: 0.75,
@@ -114,6 +112,7 @@ class _EditAccessPageState extends State<EditAccessPage> {
                                     onChanged: (value) {
                                       setState(() {
                                         selectedClient = value;
+                                        debugPrint(selectedClient);
                                       });
                                     }),
                               ),
@@ -230,7 +229,6 @@ class _EditAccessPageState extends State<EditAccessPage> {
               context.read<AccessBloc>().add(const FetchEmployeesAndAccessInformation());
               return Container();
             default:
-              debugPrint(state.toString());
               return const Center(
                 child: Text('Error retrieving information'),
               );
