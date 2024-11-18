@@ -70,7 +70,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           AdminActionTile(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/taskManagement');
+                              },
                               colors: (mode == Brightness.light)
                                   ? colorsLight
                                   : colorsDark,

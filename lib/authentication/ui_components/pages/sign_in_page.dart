@@ -4,7 +4,7 @@ import 'package:oaap/authentication/ui_components/widgets/google_button.dart';
 import 'package:oaap/authentication/ui_components/widgets/sign_in_up_button.dart';
 import 'package:oaap/authentication/ui_components/widgets/text_button.dart';
 import 'package:oaap/authentication/services/auth_service.dart';
-import '../widgets/input_field.dart';
+import '../../../global/global widgets/input_field.dart';
 
 class MySignInPage extends StatelessWidget {
   final void Function()? onTap;

@@ -12,6 +12,7 @@ import 'package:oaap/settings/data/current_theme.dart';
 import 'package:oaap/settings/data/theme.dart';
 import 'package:oaap/settings/ui/view/settings_page.dart';
 import 'package:flutter/services.dart';
+import 'package:oaap/task_management/ui/view/task_management_page.dart';
 
 /*
   1. add koi image ya gradient background in signup login screen. 
@@ -24,7 +25,7 @@ import 'package:flutter/services.dart';
   7. also view access page par poori email arahi hai boss (insert cri)
 
   8. view access screen par chips are changing color randomly
-  9. System Theme option is not persisting across multiple app sessions.
+  9. System Theme option is not persisting across multiple app sessions plus when i change theme widgets ka color on da
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,6 +78,7 @@ class MainApp extends StatelessWidget {
                 '/clientCategoryManagement': (context) => const MyClientCategoryPage(),
                 '/accessManagement': (context) => const MyAccessPage(),
                 '/settings': (context) => const MySettingsPage(),
+                '/taskManagement': (context) => const MyTaskPage(),
               },
             );
           }
