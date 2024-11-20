@@ -12,6 +12,7 @@ import 'package:oaap/settings/data/current_theme.dart';
 import 'package:oaap/settings/data/theme.dart';
 import 'package:oaap/settings/ui/view/settings_page.dart';
 import 'package:flutter/services.dart';
+import 'package:oaap/task_management/bloc/task_bloc.dart';
 import 'package:oaap/task_management/ui/view/task_management_page.dart';
 
 /*
@@ -26,6 +27,8 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
 
   8. view access screen par chips are changing color randomly
   9. System Theme option is not persisting across multiple app sessions plus when i change theme widgets ka color on da
+
+  10. create task mein empty title and description pop up background mein ata hai :(
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +59,10 @@ class MainApp extends StatelessWidget {
           BlocProvider<AccessBloc>(
             create: (_) => AccessBloc(),
           ),
+          BlocProvider<TaskBloc>(
+            create: (_) => TaskBloc(),
+          ),
+
         ],
         child: Builder(
           builder: (context) {

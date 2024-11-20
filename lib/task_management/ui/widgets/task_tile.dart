@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:oaap/task_management/data/task.dart';
 
 class MyTaskTile extends StatelessWidget {
-  const MyTaskTile({super.key});
+  final Task task;
+
+  const MyTaskTile({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -15,29 +18,32 @@ class MyTaskTile extends StatelessWidget {
             showDetails(context);
           },
           child: Ink(
-            child: const ListTile(
-              
+            child: ListTile(
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Send Data',
-                    style:  TextStyle(fontWeight: FontWeight.bold, ),
+                    task.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Due on:'),
-                      Text('7th December 2024', style: TextStyle(color: Colors.grey))
+                      const Text('Due on:'),
+                      Text(task.dateDue,
+                          style: const TextStyle(color: Colors.grey))
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Responsibility of:'),
-                      Text('Zainab Rehman', style: TextStyle(color: Colors.grey))
+                      const Text('Responsibility of:'),
+                      Text(task.responsibleUser.split('@')[0],
+                          style: const TextStyle(color: Colors.grey))
                     ],
                   )
                 ],
@@ -48,9 +54,8 @@ class MyTaskTile extends StatelessWidget {
       ),
     );
   }
-}
 
-void showDetails(BuildContext context) {
+  void showDetails(BuildContext context) {
     showModalBottomSheet(
       enableDrag: true,
       isScrollControlled: true,
@@ -80,68 +85,67 @@ void showDetails(BuildContext context) {
                     ),
                   ),
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Task Title',
-                      style: TextStyle(
+                      task.title,
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 30),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Initited on:'),
-                      Text('4th October 2024', style: TextStyle(color: Colors.grey))
-                    ],
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Initited on:'),
+                        Text(task.dateInitiated,
+                            style: const TextStyle(color: Colors.grey))
+                      ],
+                    ),
                     Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Due on:'),
-                      Text('7th December 2024', style: TextStyle(color: Colors.grey))
-                    ],
-                  ),
-                  SizedBox(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Due on:'),
+                        Text(task.dateDue,
+                            style: const TextStyle(color: Colors.grey))
+                      ],
+                    ),
+                    const SizedBox(
                       height: 15,
                     ),
                     Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Responsibility of:'),
-                      Text('Zainab Rehman', style: TextStyle(color: Colors.grey))
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Client:'),
-                      Text('Loreal', style: TextStyle(color: Colors.grey))
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Category:'),
-                      Text('Shampoo', style: TextStyle(color: Colors.grey))
-                    ],
-                  ),
-                  
-                    
-
-                    SizedBox(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Responsibility of:'),
+                        Text(task.responsibleUser.split('@')[0],
+                            style: const TextStyle(color: Colors.grey))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Client:'),
+                        Text(task.client,
+                            style: const TextStyle(color: Colors.grey))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Category:'),
+                        Text(task.category,
+                            style: const TextStyle(color: Colors.grey))
+                      ],
+                    ),
+                    const SizedBox(
                       height: 15,
                     ),
-                    Text('Description:'),
+                    const Text('Description:'),
                     Text(
-                      'Send Reports to Yahya By Friday. Include all the changes he mentioned in last meeting. Include links to all the demo videos.',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey
-                      ),
+                      task.description,
+                      style: const TextStyle(fontSize: 15, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -152,3 +156,4 @@ void showDetails(BuildContext context) {
       },
     );
   }
+}

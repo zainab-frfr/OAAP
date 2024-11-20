@@ -1,4 +1,3 @@
-import 'package:oaap/access_management/data/user_model.dart';
 
 class Task{
   final String title;
@@ -7,7 +6,7 @@ class Task{
   final String category;
   final String dateInitiated;
   final String dateDue;
-  final User responsibileUser;
+  final String responsibleUser;
 
   const Task({
     required this.title,
@@ -16,7 +15,7 @@ class Task{
     required this.category,
     required this.dateInitiated,
     required this.dateDue,
-    required this.responsibileUser,
+    required this.responsibleUser,
   });
 
   factory Task.fromJson(Map<String, dynamic> fetchedTask){
@@ -27,7 +26,7 @@ class Task{
       category: fetchedTask['category'],
       dateInitiated: fetchedTask['dateInitiated'],
       dateDue: fetchedTask['dateDue'],
-      responsibileUser: User.fromJson(fetchedTask['responsibileUser'])
+      responsibleUser: fetchedTask['responsibleUser']
     );
   }
 }
