@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oaap/access_management/data/client_cat_acc_model.dart';
 import 'package:oaap/access_management/data/user_model.dart';
+import 'package:oaap/authentication/data/curr_user.dart';
 
 part 'access_event.dart';
 part 'access_state.dart';
@@ -16,8 +17,7 @@ class AccessBloc extends Bloc<AccessEvent, AccessState> {
     on<FetchEmployeesAndAccessInformation>(_fetchEmployees);
   }
 
-  void _fetchAccessInformation(
-      FetchAccessInformation event, Emitter<AccessState> emit) async {
+  void _fetchAccessInformation(FetchAccessInformation event, Emitter<AccessState> emit) async {
     emit(LoadingState());
     try {
       List<ClientCategoryAccess> accessList = await _getList();
@@ -28,6 +28,8 @@ class AccessBloc extends Bloc<AccessEvent, AccessState> {
   }
 
   Future<List<ClientCategoryAccess>> _getList() async {
+    User currentUser = await CurrentUser().getCurrentUser();
+    
     List<ClientCategoryAccess> tempList = []; // creating another so that when method called again tou duplicates na hoin
 
     QuerySnapshot<Map<String, dynamic>> retrievedClientDocs = await store.collection('Clients').get(); // gets all client documents
@@ -41,10 +43,17 @@ class AccessBloc extends Bloc<AccessEvent, AccessState> {
         QuerySnapshot access = await category.reference.collection('Access').get(); //gets all employees with access
 
         List<String> tempAccessList = access.docs.map((doc) => doc.id).toList(); //list of employees with access
-        fetchedData[category.id] = tempAccessList;
+        if(currentUser.role == 'employee'){
+          if (tempAccessList.contains(currentUser.email)) {
+            fetchedData[category.id] = tempAccessList;
+          }
+        }else{
+          fetchedData[category.id] = tempAccessList;
+        }
       }
-
-      tempList.add(ClientCategoryAccess.fromJson(clientDoc.id, fetchedData));
+      if (fetchedData.isNotEmpty) {
+        tempList.add(ClientCategoryAccess.fromJson(clientDoc.id, fetchedData));
+      }
     }
     return tempList;
   }
