@@ -36,7 +36,6 @@ class AuthGateState extends State<AuthGate> {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   user = FirebaseAuth.instance.currentUser;
-
                   return const MyHomePage();
                 }
               },

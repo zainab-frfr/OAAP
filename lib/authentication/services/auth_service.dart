@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:oaap/access_management/data/user_model.dart' as user_model;
+import 'package:oaap/authentication/data/curr_user.dart';
 
 class AuthService{
 
@@ -102,6 +105,7 @@ class AuthService{
     await _store.collection('users').add({
       "email": user?.email,
       "sign_in_type": signUpType,
+      "role" : "employee" //role may be employee, moderator, or admin. new user is always employee. admin may change
     });
   }
 
@@ -135,5 +139,41 @@ class AuthService{
       throw Exception(e.code);
     }
 
+  }
+
+  Future<String?> getCurrentUserRole() async {
+    final User? currentUser = _auth.currentUser;
+    
+    if (currentUser == null) {
+      return null; // No user is currently signed in
+    }
+
+    try {
+      // Query Firestore to find the user document with matching email
+      final QuerySnapshot snapshot = await _store
+          .collection('users')
+          .where("email", isEqualTo: currentUser.email)
+          .get();
+
+      // If a matching document is found, return its role
+      if (snapshot.docs.isNotEmpty) {
+        String role = snapshot.docs.first.get('role');
+        saveUserLocally(snapshot);
+        return role;
+      }
+
+      return null; // No role found for the user
+    } catch (e) {
+      debugPrint('Error retrieving user role: $e');
+      return null;
+    }
+  }
+
+  void saveUserLocally(QuerySnapshot snapshot){
+    user_model.User user = user_model.User.fromJson(snapshot.docs.first.data() as Map<String,dynamic>);
+    // debugPrint(user.email);
+    // debugPrint(user.role);
+    // debugPrint(user.username);
+    CurrentUser().setCurrentUser(user);
   }
 }

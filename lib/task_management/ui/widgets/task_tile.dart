@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oaap/task_management/data/task.dart';
 
 class MyTaskTile extends StatelessWidget {
@@ -34,16 +35,14 @@ class MyTaskTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Due on:'),
-                      Text(task.dateDue,
-                          style: const TextStyle(color: Colors.grey))
+                      Text(task.dateDue, style: const TextStyle(color: Colors.grey), overflow: TextOverflow.ellipsis,)
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Responsibility of:'),
-                      Text(task.responsibleUser.split('@')[0],
-                          style: const TextStyle(color: Colors.grey))
+                      Expanded(child: Text(task.responsibleUser.split('@')[0], style: const TextStyle(color: Colors.grey), overflow: TextOverflow.ellipsis,))
                     ],
                   )
                 ],

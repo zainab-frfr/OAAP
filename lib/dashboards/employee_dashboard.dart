@@ -5,14 +5,14 @@ import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'widgets/my_round_appbar.dart';
 
 // ignore: must_be_immutable
-class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({super.key});
+class EmployeeDashboard extends StatefulWidget {
+  const EmployeeDashboard({super.key});
 
   @override
-  State<AdminDashboard> createState() => _AdminDashboardState();
+  State<EmployeeDashboard> createState() => _EmployeeDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
+class _EmployeeDashboardState extends State<EmployeeDashboard> {
   List<Color> colorsLight = [
     const Color.fromARGB(255, 208, 234, 255),
     const Color.fromARGB(255, 157, 211, 255),
@@ -57,7 +57,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   top: MediaQuery.sizeOf(context).height * 0.15,
                   left: MediaQuery.sizeOf(context).width * 0.15,
                   child: const Text(
-                    'Admin Dashboard',
+                    'Employee Dashboard',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   )),
               Positioned(
@@ -78,18 +78,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                   ? colorsLight
                                   : colorsDark,
                               text: 'All Tasks'),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.12,
-                          ),
-                          ActionTile(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/accessManagement');
-                              },
-                              colors: (mode == Brightness.light)
-                                  ? colorsLight
-                                  : colorsDark,
-                              text: 'Access Management')
                         ],
                       ),
                     ),
@@ -108,19 +96,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               colors: (mode == Brightness.light)
                                   ? colorsLight
                                   : colorsDark,
-                              text: 'Moderator Management'),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.12,
-                          ),
-                          ActionTile(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/clientCategoryManagement');
-                              },
-                              colors: (mode == Brightness.light)
-                                  ? colorsLight
-                                  : colorsDark,
-                              text: 'Client Category Management')
+                              text: 'Performance Reports'),
                         ],
                       ),
                     ),
@@ -134,15 +110,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ActionTile(
-                              onTap: () {},
-                              colors: (mode == Brightness.light)
-                                  ? colorsLight
-                                  : colorsDark,
-                              text: 'Performance Reports'),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.12,
-                          ),
                           ActionTile(
                               onTap: () {
                                 Navigator.pushNamed(context, '/settings');
@@ -160,14 +127,3 @@ class _AdminDashboardState extends State<AdminDashboard> {
         );
   }
 }
-
-// class _AdminDashboardState extends State<AdminDashboard> {
-  
-//   @override
-//   void didChangeDependencies(){
-//     super.didChangeDependencies();
-//     setState(() {});
-//   }
-
-  
-// }

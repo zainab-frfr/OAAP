@@ -30,6 +30,7 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
 
   10. create task mein empty title and description pop up background mein ata hai :(
 */
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -37,7 +38,7 @@ void main() async {
           .currentPlatform); //uses the firebase_options.dart in lib
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
-  await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme
+  await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme 
   runApp(const MainApp());
 }
 

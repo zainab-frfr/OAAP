@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AdminActionTile extends StatelessWidget {
+class ActionTile extends StatelessWidget {
   final List<Color> colors;
   final String text;
   final Function onTap;
 
-  const AdminActionTile({super.key, required this.colors, required this.text, required this.onTap});
+  const ActionTile({super.key, required this.colors, required this.text, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
