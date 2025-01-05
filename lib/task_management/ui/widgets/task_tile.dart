@@ -46,7 +46,7 @@ class MyTaskTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Responsibility of:'),
+                      const Text('Responsibility:'),
                       Text(task.responsibleUser.split('@')[0], style: const TextStyle(color: Colors.grey), overflow: TextOverflow.ellipsis,)
                     ],
                   ), 

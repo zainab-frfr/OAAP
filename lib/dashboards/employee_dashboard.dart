@@ -92,7 +92,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ActionTile(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/performanceReportEmployee');
+                              },
                               colors: (mode == Brightness.light)
                                   ? colorsLight
                                   : colorsDark,

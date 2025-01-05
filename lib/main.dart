@@ -7,6 +7,8 @@ import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/bloc/cc_bloc.dart';
 import 'package:oaap/client_category_management/ui/view/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
+import 'package:oaap/performance_reports/bloc/performance_bloc.dart';
+import 'package:oaap/performance_reports/ui/views/performance_employee_view.dart';
 import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'package:oaap/settings/data/current_theme.dart';
 import 'package:oaap/settings/data/theme.dart';
@@ -63,6 +65,9 @@ class MainApp extends StatelessWidget {
           BlocProvider<TaskBloc>(
             create: (_) => TaskBloc(),
           ),
+          BlocProvider<PerformanceBloc>(
+            create: (_) => PerformanceBloc(),
+          ),
 
         ],
         child: Builder(
@@ -87,6 +92,7 @@ class MainApp extends StatelessWidget {
                 '/accessManagement': (context) => const MyAccessPage(),
                 '/settings': (context) => const MySettingsPage(),
                 '/taskManagement': (context) => const MyTaskPage(),
+                '/performanceReportEmployee': (context) => const EmployeePerformanceReport(),
               },
             );
           }
