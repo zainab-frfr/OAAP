@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oaap/access_management/data/user_model.dart';
+import 'package:oaap/authentication/data/curr_user.dart';
+import 'package:oaap/global/global%20widgets/my_elevated_button.dart';
+import 'package:oaap/global/global%20widgets/text_button.dart';
+import 'package:oaap/task_management/bloc/task_bloc.dart';
 import 'package:oaap/task_management/data/task.dart';
 
 class MyTaskTile extends StatelessWidget {
@@ -42,9 +47,9 @@ class MyTaskTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Responsibility of:'),
-                      Expanded(child: Text(task.responsibleUser.split('@')[0], style: const TextStyle(color: Colors.grey), overflow: TextOverflow.ellipsis,))
+                      Text(task.responsibleUser.split('@')[0], style: const TextStyle(color: Colors.grey), overflow: TextOverflow.ellipsis,)
                     ],
-                  )
+                  ), 
                 ],
               ),
             ),
@@ -54,11 +59,15 @@ class MyTaskTile extends StatelessWidget {
     );
   }
 
-  void showDetails(BuildContext context) {
+  void showDetails(BuildContext context) async{
+    User currUser = await CurrentUser().getCurrentUser();
+    bool isCurrentUser = (task.responsibleUser == currUser.email);
+
     showModalBottomSheet(
       enableDrag: true,
       isScrollControlled: true,
       //scrollControlDisabledMaxHeightRatio: MediaQuery.sizeOf(context).height *0.75,
+      // ignore: use_build_context_synchronously
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
@@ -98,7 +107,7 @@ class MyTaskTile extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Initited on:'),
+                        const Text('Initiated on:'),
                         Text(task.dateInitiated,
                             style: const TextStyle(color: Colors.grey))
                       ],
@@ -146,6 +155,31 @@ class MyTaskTile extends StatelessWidget {
                       task.description,
                       style: const TextStyle(fontSize: 15, color: Colors.grey),
                     ),
+                    const SizedBox(height: 40,),
+                    if(isCurrentUser)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MyTextButton(
+                            text: 'Mark Complete', 
+                            onTap: (){
+                              markComplete(context, task);
+                            }
+                          )
+                        ],
+                      ),
+                    // const SizedBox(height: 10,),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     MyTextButton(
+                    //       text: 'Delete Task', 
+                    //       onTap: (){
+                    //         delete(context, task);
+                    //       }
+                    //     )
+                    //   ],
+                    // ),
                   ],
                 ),
               ]),
@@ -155,4 +189,94 @@ class MyTaskTile extends StatelessWidget {
       },
     );
   }
+}
+
+// void delete(BuildContext context, Task task){
+//   showDialog(
+//     context: context, 
+//     barrierDismissible: false,
+//     builder: (context) {
+//       return AlertDialog(
+//         content: const Padding(
+//           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text('Are you sure you want'),
+//               Text('to delete this task?')
+//             ],
+//             ),
+//         ),
+//         actions: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 MyElevatedButton(
+//                   width: 80,
+//                   height: 40,
+//                   child: const Text('Cancel'),
+//                   onTap: () {
+//                     Navigator.pop(context);
+//                   },
+//                 ),
+//                 MyElevatedButton(
+//                   width: 80,
+//                   height: 40,
+//                   child: const Text('OK'),
+//                   onTap: () {
+//                     context.read<TaskBloc>().add(EditTask(task: task));
+//                     Navigator.pop(context);
+//                   },
+//                 )
+//               ],
+//             )
+//           ],
+//       );
+//     },
+//   );
+// }
+
+void markComplete(BuildContext context, Task task){
+  showDialog(
+    context: context, 
+    builder: (context) {
+      return AlertDialog(
+        content: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Are you sure you want to'),
+              Text('mark this task completed?')
+            ],
+            ),
+        ),
+        actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyElevatedButton(
+                  width: 80,
+                  height: 40,
+                  child: const Text('Cancel'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                MyElevatedButton(
+                  width: 80,
+                  height: 40,
+                  child: const Text('OK'),
+                  onTap: () {
+                    context.read<TaskBloc>().add(MarkTaskComplete(task: task));
+                    Navigator.pop(context); //popping dialog box
+                    Navigator.pop(context); //popping modal sheet
+                  },
+                )
+              ],
+            )
+          ],
+      );
+    },
+  );
 }

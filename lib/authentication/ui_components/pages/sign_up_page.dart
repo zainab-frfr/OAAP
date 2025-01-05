@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:oaap/authentication/ui_components/widgets/google_button.dart';
 import 'package:oaap/authentication/ui_components/widgets/sign_in_up_button.dart';
-import 'package:oaap/authentication/ui_components/widgets/text_button.dart';
+import 'package:oaap/global/global%20widgets/text_button.dart';
 import 'package:oaap/authentication/services/auth_service.dart';
 import '../../../global/global widgets/input_field.dart';
 

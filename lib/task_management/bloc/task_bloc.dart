@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:oaap/access_management/data/user_model.dart';
 import 'package:oaap/authentication/data/curr_user.dart';
 import 'package:oaap/task_management/data/task.dart';
@@ -14,6 +15,8 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
   TaskBloc():super(DoNothingState()){
     on<AddTask>(_addTask);
     on<RetrieveTasks>(_retrieveTasks);
+    on<EditTask>(_editTask);
+    on<MarkTaskComplete>(_markComplete);
   }
 
   Future<void> _addTask(AddTask event, Emitter<TaskState> emit) async{
@@ -32,6 +35,82 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
       emit(const PopUpMessageState(message: 'Task Added successfully.'));
     }catch (e){
       emit(PopUpMessageState(message: 'Error adding task: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _editTask(EditTask event, Emitter<TaskState> emit) async {
+
+    QuerySnapshot querySnapshot = await store.collection('tasks').where('title', isEqualTo: event.task.title).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) { // task titles are unique so only one match
+        await doc.reference.update({ //only due date and responsible user are editable. 
+          'dateDue': event.task.dateDue,
+          'responsibleUser': event.task.responsibleUser,
+        });
+      }
+    } else {
+      emit(const PopUpMessageState(message: 'No such task found'));
+    }
+  }
+
+  Future<void> _markComplete(MarkTaskComplete event, Emitter<TaskState> emit) async{
+    Task task = event.task; 
+    bool addedToCompletedTasks = false;
+
+    emit(TaskLoadingState());
+    try{
+      store.collection('CompletedTasks').add({
+          'title': event.task.title,
+          'description': event.task.description,
+          'client': event.task.client,
+          'category': event.task.category,
+          'dateInitiated': event.task.dateInitiated,
+          'dateDue': event.task.dateDue,
+          'responsibleUser': event.task.responsibleUser,
+          'dateCompleted': DateFormat.yMMMMd('en_US').format(DateTime.now())
+        }
+      );
+      addedToCompletedTasks = true;
+      //emit(const PopUpMessageState(message: 'Task Added successfully.'));
+    }catch (e){
+      //emit(PopUpMessageState(message: 'Error adding task: ${e.toString()}'));
+    }
+
+    if(addedToCompletedTasks){
+      debugPrint(task.title);
+      debugPrint(task.category);
+      debugPrint(task.client);
+      debugPrint(task.responsibleUser);
+      debugPrint(task.description);
+      debugPrint(task.dateInitiated);
+      debugPrint(task.dateDue);
+
+      try{
+        QuerySnapshot snapshot = await store.collection('Tasks')
+          .where('title', isEqualTo: task.title)
+          .where('category', isEqualTo: task.category)
+          .where('client', isEqualTo: task.client)
+          .where('responsibleUser', isEqualTo: task.responsibleUser)
+          .where('description', isEqualTo: task.description)
+          .where('dateDue', isEqualTo: task.dateDue)
+          .where('dateInitiated', isEqualTo: task.dateInitiated)
+        .get();
+    
+        if(snapshot.docs.isNotEmpty){
+          for(var doc in snapshot.docs){
+            await doc.reference.delete();
+          }
+          debugPrint('Deleted Successfully');
+        }else{
+          debugPrint('found nothing');
+        }
+        add(const RetrieveTasks()); // retrieving tasks after successful deletion
+      }catch (e){
+        emit(PopUpMessageState(message: 'Error marking complete: ${e.toString()}'));
+      }
+    }else{
+      emit(const PopUpMessageState(message: 'Error marking task complete.'));
     }
   }
 

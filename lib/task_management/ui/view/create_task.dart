@@ -312,6 +312,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
   void selectDueDate(BuildContext context) async {
     dateDue = await showDatePicker(
+      
       context: context,
       firstDate: DateTime.now(),
       lastDate: DateTime(2050),
