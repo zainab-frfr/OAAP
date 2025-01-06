@@ -1,14 +1,14 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oaap/access_management/data/user_model.dart';
-import 'package:oaap/authentication/data/curr_user.dart';
-import 'package:oaap/performance_reports/bloc/performance_bloc.dart';
+import 'package:oaap/performance_reports/bloc/performance%20bloc/performance_bloc.dart';
 import 'package:oaap/performance_reports/ui/widgets/kpi_row.dart';
 import 'package:oaap/performance_reports/ui/widgets/percentage_indicator.dart';
 
 class EmployeePerformanceReport extends StatefulWidget {
-  const EmployeePerformanceReport({super.key});
+  final String userEmail;
+  final String userName;
+  const EmployeePerformanceReport({super.key, required this.userEmail, required this.userName});
 
   @override
   State<EmployeePerformanceReport> createState() => _EmployeePerformanceReportState();
@@ -19,9 +19,7 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      User user = await CurrentUser().getCurrentUser();
-      // ignore: use_build_context_synchronously
-      context.read<PerformanceBloc>().add( FetchPerformanceInformation(email: user.email));
+      context.read<PerformanceBloc>().add( FetchPerformanceInformation(email: widget.userEmail));
     });
     super.initState();
   }
@@ -30,15 +28,26 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.symmetric(
+        title: Padding(
+          padding: const EdgeInsets.symmetric(
             vertical: 20,
           ),
-          child: Text(
-            'My Performance Report',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Performance Report',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(
+                widget.userName ,
+                style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+              ),
+
+            ],
           ),
         ),
+        
       ),
       persistentFooterAlignment: AlignmentDirectional.center,
       persistentFooterButtons: [

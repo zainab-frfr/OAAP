@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oaap/access_management/data/user_model.dart';
+import 'package:oaap/authentication/data/curr_user.dart';
 import 'package:oaap/dashboards/widgets/admin_action_tile.dart';
+import 'package:oaap/performance_reports/ui/views/performance_employee_view.dart';
 import 'package:oaap/settings/bloc/theme_bloc.dart';
 import 'widgets/my_round_appbar.dart';
 
@@ -92,9 +95,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ActionTile(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/performanceReportEmployee');
+                              onTap: () async {
+                                User currUser = await CurrentUser().getCurrentUser();
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeePerformanceReport(userEmail: currUser.email,userName: currUser.username,),));
                               },
                               colors: (mode == Brightness.light)
                                   ? colorsLight

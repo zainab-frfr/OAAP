@@ -28,7 +28,7 @@ class MyPercentageIndicator extends StatelessWidget {
           lineWidth: 15.0,
           percent: percentage, 
           center: Text(
-            "${(percentage * 100).toStringAsFixed(1)}%",
+            (percentage.isNaN)? '0.0':"${(percentage * 100).toStringAsFixed(1)}%",
             style: const TextStyle(fontSize: 20.0),
           ),
           progressColor: _getColor(percentage), 

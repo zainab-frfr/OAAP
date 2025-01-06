@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:oaap/access_management/data/user_model.dart';
-import 'package:oaap/authentication/data/curr_user.dart';
 import 'package:oaap/performance_reports/data/completed_task.dart';
 import 'package:oaap/performance_reports/data/performance.dart';
 import 'package:oaap/task_management/data/task.dart';
@@ -80,6 +78,13 @@ class PerformanceBloc extends Bloc<PerformanceEvent, PerformanceState>{
         pendingTasks++;
       }
     }
+
+    // debugPrint('on time rate: $onTimeRate');
+    // debugPrint('late task rate: $lateTaskRate');
+    // debugPrint('overdue tasks: $overdueTasks');
+    // debugPrint('pending tasks: $pendingTasks');
+    // debugPrint('completed tasks: $completedTasks');
+    // debugPrint('total tasks: $totalTasks');
 
     return Performance.fromJson({
       'onTimeRate': onTimeRate,

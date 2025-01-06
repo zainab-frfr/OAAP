@@ -135,7 +135,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ActionTile(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/performanceReportAdmin');
+                              },
                               colors: (mode == Brightness.light)
                                   ? colorsLight
                                   : colorsDark,
