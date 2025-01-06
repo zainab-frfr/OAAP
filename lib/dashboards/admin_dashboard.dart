@@ -104,7 +104,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ActionTile(
-                              onTap: () {},
+                              onTap: () {
+                                 Navigator.pushNamed(
+                                    context, '/moderatorManagement');
+                              },
                               colors: (mode == Brightness.light)
                                   ? colorsLight
                                   : colorsDark,

@@ -37,7 +37,7 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
 
     // Save to a temporary file
     final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/performance.pdf');
+    final tempFile = File('${tempDir.path}/${widget.userName}.pdf');
     await tempFile.writeAsBytes(pdfData);
 
     // Open the PDF file
@@ -78,7 +78,7 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
           borderRadius: BorderRadius.circular(20),
           child: const Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: Text('Share as PDF!'),
+            child: Text('View as PDF!'),
           ),
         )
       ],

@@ -7,6 +7,7 @@ import 'package:oaap/authentication/services/auth_gate.dart';
 import 'package:oaap/client_category_management/bloc/cc_bloc.dart';
 import 'package:oaap/client_category_management/ui/view/client_category_page.dart';
 import 'package:oaap/firebase_options.dart';
+import 'package:oaap/moderator_management/ui/view/moderator_page.dart';
 import 'package:oaap/performance_reports/bloc/performance%20bloc/performance_bloc.dart';
 import 'package:oaap/performance_reports/bloc/user%20bloc/user_bloc.dart';
 import 'package:oaap/performance_reports/ui/views/performance_admin_view.dart';
@@ -34,7 +35,7 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
   10. create task mein empty title and description pop up background mein ata hai :(
 */
 
-void main() async {
+  void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions
@@ -97,6 +98,7 @@ class MainApp extends StatelessWidget {
                 '/settings': (context) => const MySettingsPage(),
                 '/taskManagement': (context) => const MyTaskPage(),
                 '/performanceReportAdmin': (context) => const AdminPerformanceView(),
+                '/moderatorManagement': (context) => const ModeratorManagementPage(),
               },
             );
           }
