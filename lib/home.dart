@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oaap/authentication/services/auth_service.dart';
 import 'package:oaap/dashboards/admin_dashboard.dart';
 import 'package:oaap/dashboards/employee_dashboard.dart';
+import 'package:oaap/dashboards/moderator_management.dart';
 //import 'package:oaap/client_category_management/ui_components/client_category_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -31,9 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return const AdminDashboard();  //const MyClientCategoryPage(); 
     }
     else if (role == 'moderator'){
-      return const Center(
-        child: Text('subadmin page'),
-      );
+      return const ModeratorDashboard();
     }else if (role == 'employee'){
       return const EmployeeDashboard(); 
     }else{
