@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oaap/performance_reports/bloc/make_pdf.dart';
 import 'package:oaap/performance_reports/bloc/performance%20bloc/performance_bloc.dart';
+import 'package:oaap/performance_reports/data/performance.dart';
 import 'package:oaap/performance_reports/ui/widgets/kpi_row.dart';
 import 'package:oaap/performance_reports/ui/widgets/percentage_indicator.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EmployeePerformanceReport extends StatefulWidget {
   final String userEmail;
@@ -16,6 +22,8 @@ class EmployeePerformanceReport extends StatefulWidget {
 
 class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
 
+  Performance? cachedPerformance;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
@@ -24,6 +32,18 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
     super.initState();
   }
 
+  Future<void> previewPdf(Performance performance) async {
+    final pdfData = await makePdf(performance, widget.userName);
+
+    // Save to a temporary file
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/performance.pdf');
+    await tempFile.writeAsBytes(pdfData);
+
+    // Open the PDF file
+    await OpenFilex.open(tempFile.path);
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +72,9 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
       persistentFooterAlignment: AlignmentDirectional.center,
       persistentFooterButtons: [
         InkWell(
-          onTap: () {},
+          onTap: () {
+            previewPdf(cachedPerformance!);
+          },
           borderRadius: BorderRadius.circular(20),
           child: const Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -68,6 +90,7 @@ class _EmployeePerformanceReportState extends State<EmployeePerformanceReport> {
             case PerformanceErrorState():
               return Center(child: Text('Error Loading Report: ${state.error}'),);
             case FetchedPerformance():
+              cachedPerformance = state.performance;
               return Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
