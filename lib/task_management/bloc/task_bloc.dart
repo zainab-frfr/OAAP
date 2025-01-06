@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:oaap/access_management/data/user_model.dart';
 import 'package:oaap/authentication/data/curr_user.dart';
+import 'package:oaap/task_management/data/note.dart';
 import 'package:oaap/task_management/data/task.dart';
 
 part 'task_event.dart';
@@ -17,6 +18,7 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
     on<RetrieveTasks>(_retrieveTasks);
     on<EditTask>(_editTask);
     on<MarkTaskComplete>(_markComplete);
+    on<AddNote>(_addNote);
   }
 
   Future<void> _addTask(AddTask event, Emitter<TaskState> emit) async{
@@ -122,11 +124,18 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
       List<Task> tasks =[];
 
       if (currUser.role == 'admin' || currUser.role == 'moderator' ){
+
         
         QuerySnapshot snapshot = await store.collection('Tasks').get();
-        tasks = snapshot.docs.map((doc) {
-          return Task.fromJson(doc.data() as Map<String, dynamic>);
-        }).toList();
+
+        for (var doc in snapshot.docs) {
+          List<Note> notes = [];
+          QuerySnapshot notesSnapshot = await doc.reference.collection('Notes').get();
+          notes = notesSnapshot.docs.map((noteDoc) {
+            return Note.fromJson(noteDoc.data() as Map<String, dynamic>);
+          }).toList();
+          tasks.add(Task.fromJson(doc.data() as Map<String, dynamic>, notes));
+        }
 
       }else{ //employee
         // need to retrieve only those tasks jis ki clients and categories ka access ho current employee k pass
@@ -158,7 +167,12 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
 
         if (usersWithAccess.contains(currUser.email)) {
           // Add task to accessibleTasks list if the user has access
-          accessibleTasks.add(Task.fromJson(doc.data() as Map<String, dynamic>));
+          List<Note> notes = [];
+          QuerySnapshot notesSnapshot = await doc.reference.collection('Notes').get();
+          notes = notesSnapshot.docs.map((noteDoc) {
+            return Note.fromJson(noteDoc.data() as Map<String, dynamic>);
+          }).toList();
+          accessibleTasks.add(Task.fromJson(doc.data() as Map<String, dynamic>, notes));
         }
       }
     } catch (e) {
@@ -195,6 +209,39 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
       return [];
     }
   }
+
+  Future<void> _addNote(AddNote event, Emitter<TaskState> emit) async {
+  try {
+    emit(TaskLoadingState());
+
+    // Find the task document
+    QuerySnapshot snapshot = await store.collection('Tasks')
+        .where('title', isEqualTo: event.task.title)
+        .where('category', isEqualTo: event.task.category)
+        .where('client', isEqualTo: event.task.client)
+        .where('responsibleUser', isEqualTo: event.task.responsibleUser)
+        .where('description', isEqualTo: event.task.description)
+        .where('dateDue', isEqualTo: event.task.dateDue)
+        .where('dateInitiated', isEqualTo: event.task.dateInitiated)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      // Add the note to the Notes subcollection of the task document
+      await snapshot.docs.first.reference.collection('Notes').add({
+        'comment': event.note.comment,
+        'username': event.note.username,
+        'date': event.note.date,
+      });
+
+      add(const RetrieveTasks());
+    } else {
+      emit(const TaskErrorState(error: 'Task not found'));
+    }
+  } catch (e) {
+    emit(TaskErrorState(error: e.toString()));
+  }
+}
+
 
 }
 

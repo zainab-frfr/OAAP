@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:oaap/access_management/data/user_model.dart';
 import 'package:oaap/authentication/data/curr_user.dart';
+import 'package:oaap/global/global%20widgets/input_field.dart';
 import 'package:oaap/global/global%20widgets/my_elevated_button.dart';
 import 'package:oaap/global/global%20widgets/text_button.dart';
 import 'package:oaap/task_management/bloc/task_bloc.dart';
+import 'package:oaap/task_management/data/note.dart';
 import 'package:oaap/task_management/data/task.dart';
 
 class MyTaskTile extends StatelessWidget {
@@ -155,7 +158,8 @@ class MyTaskTile extends StatelessWidget {
                       task.description,
                       style: const TextStyle(fontSize: 15, color: Colors.grey),
                     ),
-                    const SizedBox(height: 40,),
+                    if(isCurrentUser)
+                      const SizedBox(height: 40,),
                     if(isCurrentUser)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -168,18 +172,66 @@ class MyTaskTile extends StatelessWidget {
                           )
                         ],
                       ),
-                    // const SizedBox(height: 10,),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     MyTextButton(
-                    //       text: 'Delete Task', 
-                    //       onTap: (){
-                    //         delete(context, task);
-                    //       }
-                    //     )
-                    //   ],
-                    // ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Notes:', style: TextStyle(fontWeight: FontWeight.bold),),
+                        IconButton(
+                          onPressed: (){
+                            addNote(context, task, currUser);
+                          }, 
+                          icon:const Icon(Icons.add, size: 20,)
+                        )
+                      ],
+                    ), 
+                    const SizedBox(height: 10),
+                    if (task.notes.isEmpty)
+                      const Text(
+                        'No notes added yet.',
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    else
+                      ListView.separated(
+                         separatorBuilder: (context, index) => const Divider(
+                            thickness: 0.5,
+                            color: Colors.grey,
+                          ),
+                        shrinkWrap: true, 
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: task.notes.length,
+                        itemBuilder: (context, index) {
+                          final note = task.notes[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: ListTile(
+                              title: Text(note.comment),
+                              leading: CircleAvatar(
+                                backgroundColor: const Color.fromARGB(255, 110, 137, 151),
+                                child: Text(
+                                  '${index + 1}',
+                                  style: const TextStyle(color: Colors.white, fontSize: 15),
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'By: ${note.username}',
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  ),
+                                  Text(
+                                    'On: ${note.date}',
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                   ],
                 ),
               ]),
@@ -191,50 +243,54 @@ class MyTaskTile extends StatelessWidget {
   }
 }
 
-// void delete(BuildContext context, Task task){
-//   showDialog(
-//     context: context, 
-//     barrierDismissible: false,
-//     builder: (context) {
-//       return AlertDialog(
-//         content: const Padding(
-//           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Text('Are you sure you want'),
-//               Text('to delete this task?')
-//             ],
-//             ),
-//         ),
-//         actions: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 MyElevatedButton(
-//                   width: 80,
-//                   height: 40,
-//                   child: const Text('Cancel'),
-//                   onTap: () {
-//                     Navigator.pop(context);
-//                   },
-//                 ),
-//                 MyElevatedButton(
-//                   width: 80,
-//                   height: 40,
-//                   child: const Text('OK'),
-//                   onTap: () {
-//                     context.read<TaskBloc>().add(EditTask(task: task));
-//                     Navigator.pop(context);
-//                   },
-//                 )
-//               ],
-//             )
-//           ],
-//       );
-//     },
-//   );
-// }
+void addNote(BuildContext context, Task task, User currUser){
+  TextEditingController controller = TextEditingController();
+
+  showDialog(
+    context: context, 
+    builder: (context) {
+      return AlertDialog(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MyInputField(hintText: 'Add Comment', obscureText: false, controller: controller)
+            ],
+            ),
+        ),
+        actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyElevatedButton(
+                  width: 80,
+                  height: 40,
+                  child: const Text('Cancel'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                MyElevatedButton(
+                  width: 80,
+                  height: 40,
+                  child: const Text('OK'),
+                  onTap: () {
+                    DateTime todaysDate = DateTime.now();
+                    String todaysDateString = DateFormat.yMMMMd('en_US').format(todaysDate);
+                    Note note = Note(comment: controller.text, username: currUser.username, date: todaysDateString);
+                    context.read<TaskBloc>().add(AddNote(note: note, task: task));
+                    Navigator.pop(context); //popping dialog box
+                    Navigator.pop(context); //popping modal sheet
+                  },
+                )
+              ],
+            )
+          ],
+      );
+    },
+  );
+}
 
 void markComplete(BuildContext context, Task task){
   showDialog(
@@ -280,3 +336,50 @@ void markComplete(BuildContext context, Task task){
     },
   );
 }
+
+
+
+// void delete(BuildContext context, Task task){
+//   showDialog(
+//     context: context, 
+//     barrierDismissible: false,
+//     builder: (context) {
+//       return AlertDialog(
+//         content: const Padding(
+//           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text('Are you sure you want'),
+//               Text('to delete this task?')
+//             ],
+//             ),
+//         ),
+//         actions: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 MyElevatedButton(
+//                   width: 80,
+//                   height: 40,
+//                   child: const Text('Cancel'),
+//                   onTap: () {
+//                     Navigator.pop(context);
+//                   },
+//                 ),
+//                 MyElevatedButton(
+//                   width: 80,
+//                   height: 40,
+//                   child: const Text('OK'),
+//                   onTap: () {
+//                     context.read<TaskBloc>().add(EditTask(task: task));
+//                     Navigator.pop(context);
+//                   },
+//                 )
+//               ],
+//             )
+//           ],
+//       );
+//     },
+//   );
+// }

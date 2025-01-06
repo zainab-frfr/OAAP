@@ -1,4 +1,6 @@
 
+import 'package:oaap/task_management/data/note.dart';
+
 class Task{
   final String title;
   final String description;
@@ -7,6 +9,7 @@ class Task{
   final String dateInitiated;
   final String dateDue;
   final String responsibleUser;
+  final List<Note> notes;
 
   const Task({
     required this.title,
@@ -16,9 +19,10 @@ class Task{
     required this.dateInitiated,
     required this.dateDue,
     required this.responsibleUser,
+    this.notes = const [],
   });
 
-  factory Task.fromJson(Map<String, dynamic> fetchedTask){
+  factory Task.fromJson(Map<String, dynamic> fetchedTask,  List<Note> notes){
     return Task(
       title: fetchedTask['title'],
       description: fetchedTask['description'],
@@ -26,7 +30,8 @@ class Task{
       category: fetchedTask['category'],
       dateInitiated: fetchedTask['dateInitiated'],
       dateDue: fetchedTask['dateDue'],
-      responsibleUser: fetchedTask['responsibleUser']
+      responsibleUser: fetchedTask['responsibleUser'], 
+      notes: notes,
     );
   }
 }

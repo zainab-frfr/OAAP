@@ -337,8 +337,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       'category': selectedCategory,
       'dateInitiated': dateInitiatedString,
       'dateDue': dateDueString,
-      'responsibleUser': selectedResponsibility
-    });
+      'responsibleUser': selectedResponsibility, 
+    }, []);
     context.read<TaskBloc>().add(AddTask(task: newTask));
 
     setState(() {

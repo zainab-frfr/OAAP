@@ -30,7 +30,7 @@ class PerformanceBloc extends Bloc<PerformanceEvent, PerformanceState>{
       //getting saray incomplete tasks of current user
       QuerySnapshot snapshotIncomplete = await store.collection('Tasks').where('responsibleUser', isEqualTo:event.email ).get();
       incompleteTasks = snapshotIncomplete.docs.map((doc) {
-        return Task.fromJson(doc.data() as Map<String, dynamic>);
+        return Task.fromJson(doc.data() as Map<String, dynamic>,[]);
       }).toList();
 
       Performance performance = calculatePerformance(completedTasks, incompleteTasks);

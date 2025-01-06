@@ -22,3 +22,9 @@ final class MarkTaskComplete extends TaskEvent{
   final Task task; 
   const MarkTaskComplete({required this.task});
 }
+
+final class AddNote extends TaskEvent{
+  final Note note;
+  final Task task;
+  const AddNote({required this.note, required this.task});
+}
