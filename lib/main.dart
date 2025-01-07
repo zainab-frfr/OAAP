@@ -42,13 +42,13 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
   void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: DefaultFirebaseOptions
-          .currentPlatform); //uses the firebase_options.dart in lib
-  await _initializeLocalNotifications();
+      options: DefaultFirebaseOptions.currentPlatform); //uses the firebase_options.dart in lib
+  //await _initializeLocalNotifications();
 
   await _requestNotificationPermissions();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);  // to handle notifications
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);  // to handle background notifs
+  FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler); // to handle foreground notifications
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
@@ -96,6 +96,15 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await _initializeLocalNotifications();
   _showLocalNotification(message);
 }
+
+// Foreground message handler
+Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
+  debugPrint('Handling a foreground message: ${message.data}');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _initializeLocalNotifications();
+  _showLocalNotification(message);
+}
+
 
 Future<void> _showLocalNotification(RemoteMessage message) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
