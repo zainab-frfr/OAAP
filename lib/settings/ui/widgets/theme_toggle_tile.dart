@@ -31,7 +31,7 @@ class MyThemeTile extends StatelessWidget {
                       enableFeedback: true,
                       value: valueOfFormField,
                       items: const [
-                        DropdownMenuItem(value: 'System Theme' , child: Text('System Theme', overflow: TextOverflow.ellipsis,)),
+                        // DropdownMenuItem(value: 'System Theme' , child: Text('System Theme', overflow: TextOverflow.ellipsis,)),
                         DropdownMenuItem(value: 'Light Theme' , child: Text('Light Theme', overflow: TextOverflow.ellipsis,)),
                         DropdownMenuItem(value: 'Dark Theme' , child: Text('Dark Theme', overflow: TextOverflow.ellipsis,)),
                       ], 
