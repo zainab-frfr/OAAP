@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:oaap/access_management/bloc/access_bloc.dart';
 import 'package:oaap/access_management/ui/views/access_management_page.dart';
 import 'package:oaap/authentication/services/auth_gate.dart';
@@ -35,20 +37,91 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
   10. create task mein empty title and description pop up background mein ata hai :(
 */
 
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  
   void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions
           .currentPlatform); //uses the firebase_options.dart in lib
+  await _initializeLocalNotifications();
+
+  await _requestNotificationPermissions();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);  // to handle notifications
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
+  
   await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme 
   runApp(const MainApp());
 }
 
+Future<void> _requestNotificationPermissions() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    debugPrint('User granted notification permissions');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    debugPrint('User granted provisional notification permissions');
+  } else {
+    debugPrint('User denied notification permissions');
+  }
+}
+
+Future<void> _initializeLocalNotifications() async {
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+        //'app_icon'); // Ensure you have an app_icon in your drawable
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+// Background message handler
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint('Handling a background message: ${message.data}');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _initializeLocalNotifications();
+  _showLocalNotification(message);
+}
+
+Future<void> _showLocalNotification(RemoteMessage message) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'task_reminders', // Channel ID
+    'Task Reminders', // Channel name
+    importance: Importance.max,
+    priority: Priority.high,
+    showWhen: false,
+  );
+
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    0, // Notification ID (you can change this to show different notifications)
+    message.notification?.title, // Notification title
+    message.notification?.body, // Notification body
+    platformChannelSpecifics,
+    payload: message.data.toString(),
+  );
+}
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     final String prevTheme = CurrentTheme().themeString;

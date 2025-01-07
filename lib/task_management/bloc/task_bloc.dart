@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +25,10 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
   Future<void> _addTask(AddTask event, Emitter<TaskState> emit) async{
     emit(TaskLoadingState());
     try{
+      //retrieve the FCM token for the current device associated with the app
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      String? token = await messaging.getToken();
+      
       store.collection('Tasks').add({
           'title': event.task.title,
           'description': event.task.description,
@@ -31,7 +36,8 @@ class TaskBloc extends Bloc<TaskEvent,TaskState>{
           'category': event.task.category,
           'dateInitiated': event.task.dateInitiated,
           'dateDue': event.task.dateDue,
-          'responsibleUser': event.task.responsibleUser
+          'responsibleUser': event.task.responsibleUser,
+          'fcmToken': token,
         }
       );
       emit(const PopUpMessageState(message: 'Task Added successfully.'));
