@@ -37,24 +37,38 @@ import 'package:oaap/task_management/ui/view/task_management_page.dart';
   10. create task mein empty title and description pop up background mein ata hai :(
 */
 
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  
-  void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform); //uses the firebase_options.dart in lib
-  //await _initializeLocalNotifications();
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await _initializeLocalNotifications();
   await _requestNotificationPermissions();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);  // to handle background notifs
-  FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler); // to handle foreground notifications
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler); //to handle background and terminated notifs
+  FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler); // to handle foreground notifs
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.top]); //to hide navigation bar of phone.
-  
-  await CurrentTheme().getTheme(); //to load the previous theme into the variable inside CurrentTheme 
+  SystemChrome.setEnabledSystemUIMode( //to hide bottom panel of phone
+    SystemUiMode.manual,
+    overlays: [SystemUiOverlay.top],
+  );
+
+  await CurrentTheme().getTheme();// to persist theme across sessions
   runApp(const MainApp());
+}
+
+Future<void> _initializeLocalNotifications() async {
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
 Future<void> _requestNotificationPermissions() async {
@@ -75,36 +89,15 @@ Future<void> _requestNotificationPermissions() async {
   }
 }
 
-Future<void> _initializeLocalNotifications() async {
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-        //'app_icon'); // Ensure you have an app_icon in your drawable
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
-
-// Background message handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('Handling a background message: ${message.data}');
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await _initializeLocalNotifications();
   _showLocalNotification(message);
 }
 
-// Foreground message handler
-Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
+void _firebaseMessagingForegroundHandler(RemoteMessage message) {
   debugPrint('Handling a foreground message: ${message.data}');
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await _initializeLocalNotifications();
   _showLocalNotification(message);
 }
-
 
 Future<void> _showLocalNotification(RemoteMessage message) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -119,10 +112,13 @@ Future<void> _showLocalNotification(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
+  // Generate a unique notification ID
+  final notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
   await flutterLocalNotificationsPlugin.show(
-    0, // Notification ID (you can change this to show different notifications)
-    message.notification?.title, // Notification title
-    message.notification?.body, // Notification body
+    notificationId, // Unique ID for each notification
+    message.notification?.title ?? 'No Title',
+    message.notification?.body ?? 'No Body',
     platformChannelSpecifics,
     payload: message.data.toString(),
   );
