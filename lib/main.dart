@@ -21,22 +21,6 @@ import 'package:flutter/services.dart';
 import 'package:oaap/task_management/bloc/task_bloc.dart';
 import 'package:oaap/task_management/ui/view/task_management_page.dart';
 
-/*
-  1. add koi image ya gradient background in signup login screen. 
-
-  3. during deletion  of client delete all fields within document also lolsies
-  4. if i click on access management and foran click on grant/revoke access tou exception
-  
-  5. access mein ALL acesss
-  6. access mein check if aready has access
-  7. also view access page par poori email arahi hai boss (insert cri)
-
-  8. view access screen par chips are changing color randomly
-  9. System Theme option is not persisting across multiple app sessions plus when i change theme widgets ka color on da
-
-  10. create task mein empty title and description pop up background mein ata hai :(
-*/
-
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {

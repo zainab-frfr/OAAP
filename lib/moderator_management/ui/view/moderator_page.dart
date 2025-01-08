@@ -52,64 +52,68 @@ class _ModeratorManagementPageState extends State<ModeratorManagementPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        MySignInUpButton(
-                          onTap: (){
-                            showDialog(
-                              context: context, 
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Add Moderator'),
-                                  content: SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView.builder(
-                                      itemCount: employees.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(employees[index].username),
-                                          onTap: () {
-                                            context.read<UserBloc>().add( MakeModerator(userEmail: employees[index].email));
-                                            Navigator.pop(context); 
-                                          },
-                                        );
-                                      },
+                        Expanded(
+                          child: MySignInUpButton(
+                            onTap: (){
+                              showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Add Moderator'),
+                                    content: SizedBox(
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        itemCount: employees.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(employees[index].username),
+                                            onTap: () {
+                                              context.read<UserBloc>().add( MakeModerator(userEmail: employees[index].email));
+                                              Navigator.pop(context); 
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          }, 
-                          text: ' Add  Moderator '
+                                  );
+                                },
+                              );
+                            }, 
+                            text: ' Add  Moderator '
+                          ),
                         ),
                         const SizedBox(width: 10,), 
-                        MySignInUpButton(
-                          onTap: (){
-                            showDialog(
-                              context: context, 
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Remove Moderator'),
-                                  content: SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView.builder(
-                                      itemCount: moderators.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(moderators[index].username),
-                                          onTap: () {
-                                            context.read<UserBloc>().add( RemoveModerator(userEmail: moderators[index].email));
-                                            Navigator.pop(context); 
-                                          },
-                                        );
-                                      },
+                        Expanded(
+                          child: MySignInUpButton(
+                            onTap: (){
+                              showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Remove Moderator'),
+                                    content: SizedBox(
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        itemCount: moderators.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(moderators[index].username),
+                                            onTap: () {
+                                              context.read<UserBloc>().add( RemoveModerator(userEmail: moderators[index].email));
+                                              Navigator.pop(context); 
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          }, 
-                          text: 'Remove Moderator'), 
+                                  );
+                                },
+                              );
+                            }, 
+                            text: 'Remove Moderator'),
+                        ), 
                       ],
                     ), 
                     const SizedBox(height: 30,), 
